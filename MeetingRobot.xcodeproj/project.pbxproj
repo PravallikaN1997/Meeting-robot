@@ -8,19 +8,30 @@
 
 /* Begin PBXBuildFile section */
 		AA0003332FC76A190054E80E /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = AA0002222FC76A190054E80E /* Lottie */; };
+		CC001112FC76A190054E80E /* MeetingRobotApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB001112FC76A190054E80E /* MeetingRobotApp.swift */; };
+		CC002222FC76A190054E80E /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB002222FC76A190054E80E /* ContentView.swift */; };
+		CC003332FC76A190054E80E /* DesignSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB003332FC76A190054E80E /* DesignSystem.swift */; };
+		CC004442FC76A190054E80E /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB004442FC76A190054E80E /* Theme.swift */; };
+		CC005552FC76A190054E80E /* RobotAnimationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB005552FC76A190054E80E /* RobotAnimationView.swift */; };
+		CC006662FC76A190054E80E /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB006662FC76A190054E80E /* OnboardingView.swift */; };
+		CC007772FC76A190054E80E /* ConfirmationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB007772FC76A190054E80E /* ConfirmationView.swift */; };
+		CC008882FC76A190054E80E /* robot.json in Resources */ = {isa = PBXBuildFile; fileRef = BB008882FC76A190054E80E /* robot.json */; };
+		CC009992FC76A190054E80E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BB009992FC76A190054E80E /* Assets.xcassets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		85679F892FC76A190054E80E /* MeetingRobot.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MeetingRobot.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		BB001112FC76A190054E80E /* MeetingRobotApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeetingRobotApp.swift; sourceTree = "<group>"; };
+		BB002222FC76A190054E80E /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		BB003332FC76A190054E80E /* DesignSystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignSystem.swift; sourceTree = "<group>"; };
+		BB004442FC76A190054E80E /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
+		BB005552FC76A190054E80E /* RobotAnimationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RobotAnimationView.swift; sourceTree = "<group>"; };
+		BB006662FC76A190054E80E /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
+		BB007772FC76A190054E80E /* ConfirmationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmationView.swift; sourceTree = "<group>"; };
+		BB008882FC76A190054E80E /* robot.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = robot.json; sourceTree = "<group>"; };
+		BB009992FC76A190054E80E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		BB00AAA2FC76A190054E80E /* MeetingRobot.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MeetingRobot.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
-
-/* Begin PBXFileSystemSynchronizedRootGroup section */
-		85679F8B2FC76A190054E80E /* MeetingRobot */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = MeetingRobot;
-			sourceTree = "<group>";
-		};
-/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		85679F862FC76A190054E80E /* Frameworks */ = {
@@ -50,6 +61,23 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		85679F8B2FC76A190054E80E /* MeetingRobot */ = {
+			isa = PBXGroup;
+			children = (
+				BB001112FC76A190054E80E /* MeetingRobotApp.swift */,
+				BB002222FC76A190054E80E /* ContentView.swift */,
+				BB003332FC76A190054E80E /* DesignSystem.swift */,
+				BB004442FC76A190054E80E /* Theme.swift */,
+				BB005552FC76A190054E80E /* RobotAnimationView.swift */,
+				BB006662FC76A190054E80E /* OnboardingView.swift */,
+				BB007772FC76A190054E80E /* ConfirmationView.swift */,
+				BB008882FC76A190054E80E /* robot.json */,
+				BB009992FC76A190054E80E /* Assets.xcassets */,
+				BB00AAA2FC76A190054E80E /* MeetingRobot.entitlements */,
+			);
+			path = MeetingRobot;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -64,9 +92,6 @@
 			buildRules = (
 			);
 			dependencies = (
-			);
-			fileSystemSynchronizedGroups = (
-				85679F8B2FC76A190054E80E /* MeetingRobot */,
 			);
 			name = MeetingRobot;
 			packageProductDependencies = (
@@ -118,6 +143,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CC008882FC76A190054E80E /* robot.json in Resources */,
+				CC009992FC76A190054E80E /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -128,6 +155,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CC001112FC76A190054E80E /* MeetingRobotApp.swift in Sources */,
+				CC002222FC76A190054E80E /* ContentView.swift in Sources */,
+				CC003332FC76A190054E80E /* DesignSystem.swift in Sources */,
+				CC004442FC76A190054E80E /* Theme.swift in Sources */,
+				CC005552FC76A190054E80E /* RobotAnimationView.swift in Sources */,
+				CC006662FC76A190054E80E /* OnboardingView.swift in Sources */,
+				CC007772FC76A190054E80E /* ConfirmationView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
