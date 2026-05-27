@@ -51,7 +51,6 @@ struct OnboardingView: View {
             Spacer().frame(height: MRSpacing.xs)
 
             RobotAnimationView()
-                .frame(width: 80, height: 80)
                 .offset(x: robotOffset)
 
             Spacer().frame(height: MRSpacing.sm)
