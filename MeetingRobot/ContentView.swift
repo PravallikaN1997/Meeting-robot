@@ -1,21 +1,21 @@
-//
-//  ContentView.swift
-//  MeetingRobot
-//
-//  Created by Pravallika Navuluru on 5/27/26.
-//
-
 import SwiftUI
 
 struct ContentView: View {
+    @State private var hasCompletedOnboarding = UserDefaults.standard.bool(forKey: "hasCompletedOnboarding")
+
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        if hasCompletedOnboarding {
+            ZStack {
+                Color.mrBackground.ignoresSafeArea()
+                Text("Dashboard — Phase 2")
+                    .font(.mrSubheading)
+                    .foregroundColor(.mrTextSecondary)
+            }
+            .frame(width: 600, height: 540)
+        } else {
+            OnboardingView(hasCompletedOnboarding: $hasCompletedOnboarding)
+                .frame(width: 600, height: 540)
         }
-        .padding()
     }
 }
 
