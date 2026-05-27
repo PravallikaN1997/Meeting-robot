@@ -14,6 +14,8 @@ struct OnboardingView: View {
         "Let's get those meetings sorted ⚡",
         "I've been waiting for you... 👁️",
         "Never miss a standup again 🙌",
+        "Beep boop... loading your schedule 🔄",
+        "I walk so your meetings don't sneak up on you 🚶",
     ]
 
     var body: some View {
@@ -41,7 +43,7 @@ struct OnboardingView: View {
         VStack(spacing: 0) {
             Spacer()
 
-            messageCarousel
+            speechBubble
 
             Spacer().frame(height: MRSpacing.lg)
 
@@ -65,23 +67,22 @@ struct OnboardingView: View {
         }
     }
 
-    // MARK: - Message carousel
+    // MARK: - Speech bubble
 
-    private var messageCarousel: some View {
+    private var speechBubble: some View {
         ZStack {
             ForEach(messages.indices, id: \.self) { i in
                 if i == messageIndex {
-                    Text(messages[i])
-                        .font(.mrBody)
-                        .foregroundColor(.white.opacity(0.88))
-                        .multilineTextAlignment(.center)
-                        .transition(.opacity)
+                    SpeechBubbleView(text: messages[i])
+                        .transition(
+                            .scale(scale: 0.8).combined(with: .opacity)
+                        )
                 }
             }
         }
-        .frame(height: 44)
-        .padding(.horizontal, MRSpacing.xl + MRSpacing.md)
-        .animation(.easeInOut(duration: 0.5), value: messageIndex)
+        .frame(height: 80)
+        .padding(.horizontal, MRSpacing.xl)
+        .animation(.spring(response: 0.38, dampingFraction: 0.62), value: messageIndex)
     }
 
     // MARK: - App name + sign-in buttons
@@ -163,6 +164,42 @@ struct OnboardingView: View {
 }
 
 // MARK: - Supporting types (private to this file)
+
+private struct SpeechBubbleView: View {
+    let text: String
+
+    var body: some View {
+        VStack(spacing: 0) {
+            Text(text)
+                .font(.mrBody)
+                .foregroundColor(Color(hex: "1C1C2E"))
+                .multilineTextAlignment(.center)
+                .padding(.horizontal, MRSpacing.md + MRSpacing.xs)
+                .padding(.vertical, MRSpacing.sm + MRSpacing.xs)
+                .background(
+                    RoundedRectangle(cornerRadius: MRRadius.md)
+                        .fill(Color.white)
+                )
+
+            BubblePointer()
+                .fill(Color.white)
+                .frame(width: 18, height: 10)
+                .offset(y: -0.5) // close hairline gap between rect and triangle
+        }
+        .shadow(color: .black.opacity(0.18), radius: 10, x: 0, y: 4)
+    }
+}
+
+private struct BubblePointer: Shape {
+    func path(in rect: CGRect) -> Path {
+        var path = Path()
+        path.move(to: CGPoint(x: 0, y: 0))
+        path.addLine(to: CGPoint(x: rect.midX, y: rect.maxY))
+        path.addLine(to: CGPoint(x: rect.maxX, y: 0))
+        path.closeSubpath()
+        return path
+    }
+}
 
 private struct ScalePressStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
