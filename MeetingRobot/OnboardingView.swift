@@ -66,10 +66,10 @@ struct OnboardingView: View {
             bottomStack
         }
         .onAppear {
-            withAnimation(.spring(response: 2.5, dampingFraction: 0.8).delay(0.5)) {
+            withAnimation(.spring(response: 4.0, dampingFraction: 0.9).delay(1.0)) {
                 robotOffset = 0
             }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 6.0) {
                 withAnimation { showBubble = true }
             }
         }
