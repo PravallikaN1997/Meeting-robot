@@ -26,6 +26,9 @@ struct OnboardingView: View {
                 .fill(.ultraThinMaterial)
                 .ignoresSafeArea()
 
+            Color.black.opacity(0.35)
+                .ignoresSafeArea()
+
             if showConfirmation {
                 ConfirmationView(hasCompletedOnboarding: $hasCompletedOnboarding)
                     .transition(.opacity)
@@ -45,11 +48,17 @@ struct OnboardingView: View {
 
             speechBubble
 
-            Spacer().frame(height: MRSpacing.lg)
+            Spacer().frame(height: MRSpacing.xs)
 
             RobotAnimationView()
-                .frame(width: 200, height: 200)
+                .frame(width: 80, height: 80)
                 .offset(x: robotOffset)
+
+            Spacer().frame(height: MRSpacing.sm)
+
+            Text("Meeting Robot")
+                .font(.mrHeading)
+                .foregroundColor(.white)
 
             Spacer()
 
@@ -80,25 +89,16 @@ struct OnboardingView: View {
                 }
             }
         }
-        .frame(height: 80)
-        .padding(.horizontal, MRSpacing.xl)
+        .frame(maxWidth: 220, maxHeight: 60)
         .animation(.spring(response: 0.38, dampingFraction: 0.62), value: messageIndex)
     }
 
     // MARK: - App name + sign-in buttons
 
     private var bottomStack: some View {
-        VStack(spacing: MRSpacing.md) {
-            Text("Meeting Robot")
-                .font(.mrHeading)
-                .foregroundColor(.white)
-
-            Spacer().frame(height: MRSpacing.xs)
-
-            VStack(spacing: MRSpacing.sm) {
-                appleButton
-                googleButton
-            }
+        VStack(spacing: MRSpacing.sm) {
+            appleButton
+            googleButton
         }
         .padding(.horizontal, MRSpacing.xl)
         .padding(.bottom, MRSpacing.xl)
@@ -171,22 +171,21 @@ private struct SpeechBubbleView: View {
     var body: some View {
         VStack(spacing: 0) {
             Text(text)
-                .font(.mrBody)
+                .font(.mrBubble)
                 .foregroundColor(Color(hex: "1C1C2E"))
                 .multilineTextAlignment(.center)
-                .padding(.horizontal, MRSpacing.md + MRSpacing.xs)
-                .padding(.vertical, MRSpacing.sm + MRSpacing.xs)
+                .padding(8)
                 .background(
-                    RoundedRectangle(cornerRadius: MRRadius.md)
+                    RoundedRectangle(cornerRadius: MRRadius.sm)
                         .fill(Color.white)
                 )
 
             BubblePointer()
                 .fill(Color.white)
-                .frame(width: 18, height: 10)
-                .offset(y: -0.5) // close hairline gap between rect and triangle
+                .frame(width: 8, height: 6)
+                .offset(y: -0.5)
         }
-        .shadow(color: .black.opacity(0.18), radius: 10, x: 0, y: 4)
+        .shadow(color: .black.opacity(0.18), radius: 6, x: 0, y: 3)
     }
 }
 

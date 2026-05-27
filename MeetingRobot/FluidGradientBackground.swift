@@ -3,7 +3,7 @@ import SwiftUI
 struct FluidGradientBackground: View {
     var body: some View {
         TimelineView(.animation) { tl in
-            let t = Float(tl.date.timeIntervalSinceReferenceDate) * 0.18
+            let t = Float(tl.date.timeIntervalSinceReferenceDate) * 0.09
             MeshGradient(
                 width: 3, height: 3,
                 points: animatedPoints(t: t),
