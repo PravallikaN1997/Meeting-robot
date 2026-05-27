@@ -53,7 +53,7 @@ struct OnboardingView: View {
             RobotAnimationView()
                 .offset(x: robotOffset)
 
-            Spacer().frame(height: MRSpacing.sm)
+            Spacer().frame(height: MRSpacing.lg)
 
             Text("Meeting Robot")
                 .font(.mrHeading)
@@ -64,11 +64,11 @@ struct OnboardingView: View {
             bottomStack
         }
         .onAppear {
-            withAnimation(.spring(response: 1.1, dampingFraction: 0.72).delay(0.25)) {
+            withAnimation(.spring(response: 2.5, dampingFraction: 0.8).delay(0.5)) {
                 robotOffset = 0
             }
         }
-        .onReceive(Timer.publish(every: 3, on: .main, in: .common).autoconnect()) { _ in
+        .onReceive(Timer.publish(every: 10, on: .main, in: .common).autoconnect()) { _ in
             withAnimation(.easeInOut(duration: 0.5)) {
                 messageIndex = (messageIndex + 1) % messages.count
             }
@@ -125,7 +125,9 @@ struct OnboardingView: View {
     private var googleButton: some View {
         Button(action: connectGoogleCalendar) {
             HStack(spacing: MRSpacing.sm) {
-                GoogleGLogo(size: 18)
+                Text("G")
+                    .font(.system(.body, design: .default).weight(.bold))
+                    .foregroundColor(Color(hex: "4285F4"))
                 Text("Continue with Google")
                     .font(.system(.body, design: .default).weight(.medium))
             }
@@ -207,43 +209,6 @@ private struct ScalePressStyle: ButtonStyle {
     }
 }
 
-private struct GoogleGLogo: View {
-    var size: CGFloat = 18
-
-    var body: some View {
-        Canvas { ctx, sz in
-            let cx = sz.width / 2
-            let cy = sz.height / 2
-            let r  = min(sz.width, sz.height) / 2 - 0.5
-            let lw = r * 0.48
-
-            // clockwise: true — angle 0=right, 90=bottom, 180=left, 270=top
-            func arc(from: Double, to: Double, color: Color) {
-                var p = Path()
-                p.addArc(center: CGPoint(x: cx, y: cy),
-                         radius: r - lw / 2,
-                         startAngle: .degrees(from),
-                         endAngle:   .degrees(to),
-                         clockwise:  true)
-                ctx.stroke(p, with: .color(color),
-                           style: StrokeStyle(lineWidth: lw, lineCap: .butt))
-            }
-
-            // Arc segments (clockwise), gap from 315° → 45° (right side, where bar opens)
-            arc(from:  45, to: 180, color: Color(hex: "4285F4")) // blue  — bottom half
-            arc(from: 180, to: 235, color: Color(hex: "34A853")) // green — lower-left
-            arc(from: 235, to: 260, color: Color(hex: "FBBC05")) // yellow— upper-left
-            arc(from: 260, to: 315, color: Color(hex: "EA4335")) // red   — top
-
-            // Horizontal crossbar (blue): center → right, at vertical midline
-            var bar = Path()
-            bar.move(to: CGPoint(x: cx + 1, y: cy))
-            bar.addLine(to: CGPoint(x: sz.width - 0.5, y: cy))
-            ctx.stroke(bar, with: .color(Color(hex: "4285F4")), lineWidth: lw * 0.88)
-        }
-        .frame(width: size, height: size)
-    }
-}
 
 #Preview {
     OnboardingView(hasCompletedOnboarding: .constant(false))

@@ -42,7 +42,7 @@ extension Color {
 // MARK: - Fonts
 
 extension Font {
-    static let mrHeading    = Font.system(.title2,     design: .rounded).weight(.semibold)
+    static let mrHeading    = Font.system(.title,      design: .rounded).weight(.semibold)
     static let mrSubheading = Font.system(.title3,     design: .rounded).weight(.light)
     static let mrButton     = Font.system(.callout,    design: .monospaced).weight(.semibold)
     static let mrBody       = Font.system(.body,       design: .rounded)
