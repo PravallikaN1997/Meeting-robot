@@ -15,6 +15,7 @@
 		CC005552FC76A190054E80E /* RobotAnimationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB005552FC76A190054E80E /* RobotAnimationView.swift */; };
 		CC006662FC76A190054E80E /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB006662FC76A190054E80E /* OnboardingView.swift */; };
 		CC007772FC76A190054E80E /* ConfirmationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB007772FC76A190054E80E /* ConfirmationView.swift */; };
+		DD001112FC76A190054E80E /* FluidGradientBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD002222FC76A190054E80E /* FluidGradientBackground.swift */; };
 		CC008882FC76A190054E80E /* robot.json in Resources */ = {isa = PBXBuildFile; fileRef = BB008882FC76A190054E80E /* robot.json */; };
 		CC009992FC76A190054E80E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BB009992FC76A190054E80E /* Assets.xcassets */; };
 /* End PBXBuildFile section */
@@ -28,6 +29,7 @@
 		BB005552FC76A190054E80E /* RobotAnimationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RobotAnimationView.swift; sourceTree = "<group>"; };
 		BB006662FC76A190054E80E /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		BB007772FC76A190054E80E /* ConfirmationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmationView.swift; sourceTree = "<group>"; };
+		DD002222FC76A190054E80E /* FluidGradientBackground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FluidGradientBackground.swift; sourceTree = "<group>"; };
 		BB008882FC76A190054E80E /* robot.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = robot.json; sourceTree = "<group>"; };
 		BB009992FC76A190054E80E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		BB00AAA2FC76A190054E80E /* MeetingRobot.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MeetingRobot.entitlements; sourceTree = "<group>"; };
@@ -71,6 +73,7 @@
 				BB005552FC76A190054E80E /* RobotAnimationView.swift */,
 				BB006662FC76A190054E80E /* OnboardingView.swift */,
 				BB007772FC76A190054E80E /* ConfirmationView.swift */,
+				DD002222FC76A190054E80E /* FluidGradientBackground.swift */,
 				BB008882FC76A190054E80E /* robot.json */,
 				BB009992FC76A190054E80E /* Assets.xcassets */,
 				BB00AAA2FC76A190054E80E /* MeetingRobot.entitlements */,
@@ -162,6 +165,7 @@
 				CC005552FC76A190054E80E /* RobotAnimationView.swift in Sources */,
 				CC006662FC76A190054E80E /* OnboardingView.swift in Sources */,
 				CC007772FC76A190054E80E /* ConfirmationView.swift in Sources */,
+				DD001112FC76A190054E80E /* FluidGradientBackground.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -4,10 +4,24 @@ import EventKit
 struct OnboardingView: View {
     @Binding var hasCompletedOnboarding: Bool
     @State private var showConfirmation = false
+    @State private var messageIndex = 0
+    @State private var robotOffset: CGFloat = -500
+
+    private let messages = [
+        "Hey! I'm better than your alarm clock 🤖",
+        "I promise I won't judge your meeting count 👀",
+        "Let's get those meetings sorted ⚡",
+        "I've been waiting for you... 👁️",
+        "Never miss a standup again 🙌",
+    ]
 
     var body: some View {
         ZStack {
-            Color.mrBackground.ignoresSafeArea()
+            FluidGradientBackground()
+
+            Rectangle()
+                .fill(.ultraThinMaterial)
+                .ignoresSafeArea()
 
             if showConfirmation {
                 ConfirmationView(hasCompletedOnboarding: $hasCompletedOnboarding)
@@ -17,46 +31,113 @@ struct OnboardingView: View {
                     .transition(.opacity)
             }
         }
-        .animation(.easeInOut(duration: 0.4), value: showConfirmation)
+        .animation(.easeInOut(duration: 0.5), value: showConfirmation)
     }
+
+    // MARK: - Main content
 
     private var mainContent: some View {
         VStack(spacing: 0) {
             Spacer()
 
+            messageCarousel
+
+            Spacer().frame(height: MRSpacing.lg)
+
             RobotAnimationView()
-                .frame(width: 220, height: 220)
-
-            Spacer().frame(height: MRSpacing.xl)
-
-            Text("Meeting Robot")
-                .font(.mrHeading)
-                .foregroundColor(.mrTextPrimary)
-
-            Spacer().frame(height: MRSpacing.md)
-
-            Text("I'll nudge you before every meeting.")
-                .font(.mrSubheading)
-                .foregroundColor(.mrTextSecondary)
-
-            Spacer().frame(height: MRSpacing.xl + MRSpacing.md)
-
-            HStack(spacing: MRSpacing.md) {
-                Button("CONNECT APPLE CALENDAR") {
-                    requestCalendarAccess()
-                }
-                .buttonStyle(CyanPillButtonStyle())
-
-                Button("CONNECT GOOGLE CALENDAR") {
-                    connectGoogleCalendar()
-                }
-                .buttonStyle(OutlinePillButtonStyle())
-            }
+                .frame(width: 200, height: 200)
+                .offset(x: robotOffset)
 
             Spacer()
+
+            bottomStack
         }
-        .padding(.horizontal, MRSpacing.xl + MRSpacing.sm)
+        .onAppear {
+            withAnimation(.spring(response: 1.1, dampingFraction: 0.72).delay(0.25)) {
+                robotOffset = 0
+            }
+        }
+        .onReceive(Timer.publish(every: 3, on: .main, in: .common).autoconnect()) { _ in
+            withAnimation(.easeInOut(duration: 0.5)) {
+                messageIndex = (messageIndex + 1) % messages.count
+            }
+        }
     }
+
+    // MARK: - Message carousel
+
+    private var messageCarousel: some View {
+        ZStack {
+            ForEach(messages.indices, id: \.self) { i in
+                if i == messageIndex {
+                    Text(messages[i])
+                        .font(.mrBody)
+                        .foregroundColor(.white.opacity(0.88))
+                        .multilineTextAlignment(.center)
+                        .transition(.opacity)
+                }
+            }
+        }
+        .frame(height: 44)
+        .padding(.horizontal, MRSpacing.xl + MRSpacing.md)
+        .animation(.easeInOut(duration: 0.5), value: messageIndex)
+    }
+
+    // MARK: - App name + sign-in buttons
+
+    private var bottomStack: some View {
+        VStack(spacing: MRSpacing.md) {
+            Text("Meeting Robot")
+                .font(.mrHeading)
+                .foregroundColor(.white)
+
+            Spacer().frame(height: MRSpacing.xs)
+
+            VStack(spacing: MRSpacing.sm) {
+                appleButton
+                googleButton
+            }
+        }
+        .padding(.horizontal, MRSpacing.xl)
+        .padding(.bottom, MRSpacing.xl)
+    }
+
+    // MARK: - Buttons
+
+    private var appleButton: some View {
+        Button(action: requestCalendarAccess) {
+            HStack(spacing: MRSpacing.sm) {
+                Image(systemName: "apple.logo")
+                    .font(.system(size: 16, weight: .medium))
+                Text("Continue with Apple")
+                    .font(.system(.body, design: .default).weight(.medium))
+            }
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, MRSpacing.md)
+            .background(Color.white)
+            .foregroundColor(.black)
+            .clipShape(Capsule())
+        }
+        .buttonStyle(ScalePressStyle())
+    }
+
+    private var googleButton: some View {
+        Button(action: connectGoogleCalendar) {
+            HStack(spacing: MRSpacing.sm) {
+                GoogleGLogo(size: 18)
+                Text("Continue with Google")
+                    .font(.system(.body, design: .default).weight(.medium))
+            }
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, MRSpacing.md)
+            .background(Color.clear)
+            .foregroundColor(.white)
+            .overlay(Capsule().stroke(Color.white.opacity(0.65), lineWidth: 1.5))
+        }
+        .buttonStyle(ScalePressStyle())
+    }
+
+    // MARK: - Actions
 
     private func requestCalendarAccess() {
         Task {
@@ -80,7 +161,55 @@ struct OnboardingView: View {
     }
 }
 
+// MARK: - Supporting types (private to this file)
+
+private struct ScalePressStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .scaleEffect(configuration.isPressed ? 0.97 : 1.0)
+            .animation(.easeOut(duration: 0.1), value: configuration.isPressed)
+    }
+}
+
+private struct GoogleGLogo: View {
+    var size: CGFloat = 18
+
+    var body: some View {
+        Canvas { ctx, sz in
+            let cx = sz.width / 2
+            let cy = sz.height / 2
+            let r  = min(sz.width, sz.height) / 2 - 0.5
+            let lw = r * 0.48
+
+            // clockwise: true — angle 0=right, 90=bottom, 180=left, 270=top
+            func arc(from: Double, to: Double, color: Color) {
+                var p = Path()
+                p.addArc(center: CGPoint(x: cx, y: cy),
+                         radius: r - lw / 2,
+                         startAngle: .degrees(from),
+                         endAngle:   .degrees(to),
+                         clockwise:  true)
+                ctx.stroke(p, with: .color(color),
+                           style: StrokeStyle(lineWidth: lw, lineCap: .butt))
+            }
+
+            // Arc segments (clockwise), gap from 315° → 45° (right side, where bar opens)
+            arc(from:  45, to: 180, color: Color(hex: "4285F4")) // blue  — bottom half
+            arc(from: 180, to: 235, color: Color(hex: "34A853")) // green — lower-left
+            arc(from: 235, to: 260, color: Color(hex: "FBBC05")) // yellow— upper-left
+            arc(from: 260, to: 315, color: Color(hex: "EA4335")) // red   — top
+
+            // Horizontal crossbar (blue): center → right, at vertical midline
+            var bar = Path()
+            bar.move(to: CGPoint(x: cx + 1, y: cy))
+            bar.addLine(to: CGPoint(x: sz.width - 0.5, y: cy))
+            ctx.stroke(bar, with: .color(Color(hex: "4285F4")), lineWidth: lw * 0.88)
+        }
+        .frame(width: size, height: size)
+    }
+}
+
 #Preview {
     OnboardingView(hasCompletedOnboarding: .constant(false))
-        .frame(width: 600, height: 540)
+        .frame(width: 600, height: 560)
 }
