@@ -130,7 +130,10 @@ struct OnboardingView: View {
     private var googleButton: some View {
         Button(action: connectGoogleCalendar) {
             HStack(spacing: MRSpacing.sm) {
-                GoogleGLogo(size: 22)
+                Image("google-logo")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 22, height: 22)
                 Text("Continue with Google")
                     .font(.system(.body, design: .default).weight(.medium))
             }
@@ -213,40 +216,6 @@ private struct ScalePressStyle: ButtonStyle {
 }
 
 
-private struct GoogleGLogo: View {
-    var size: CGFloat = 22
-
-    var body: some View {
-        Canvas { ctx, sz in
-            let cx = sz.width / 2
-            let cy = sz.height / 2
-            let r  = min(sz.width, sz.height) / 2 - 0.5
-            let lw = r * 0.48
-
-            func arc(from: Double, to: Double, color: Color) {
-                var p = Path()
-                p.addArc(center: CGPoint(x: cx, y: cy),
-                         radius: r - lw / 2,
-                         startAngle: .degrees(from),
-                         endAngle:   .degrees(to),
-                         clockwise:  true)
-                ctx.stroke(p, with: .color(color),
-                           style: StrokeStyle(lineWidth: lw, lineCap: .butt))
-            }
-
-            arc(from:  45, to: 180, color: Color(hex: "4285F4")) // blue
-            arc(from: 180, to: 235, color: Color(hex: "34A853")) // green
-            arc(from: 235, to: 260, color: Color(hex: "FBBC05")) // yellow
-            arc(from: 260, to: 315, color: Color(hex: "EA4335")) // red
-
-            var bar = Path()
-            bar.move(to: CGPoint(x: cx + 1, y: cy))
-            bar.addLine(to: CGPoint(x: sz.width - 0.5, y: cy))
-            ctx.stroke(bar, with: .color(Color(hex: "4285F4")), lineWidth: lw * 0.88)
-        }
-        .frame(width: size, height: size)
-    }
-}
 
 #Preview {
     OnboardingView(hasCompletedOnboarding: .constant(false))
