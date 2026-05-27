@@ -7,6 +7,7 @@ struct OnboardingView: View {
     @State private var showConfirmation = false
     @State private var messageIndex = 0
     @State private var robotOffset: CGFloat = -500
+    @State private var showBubble = false
 
     private let messages = [
         "Hey! I'm better than your alarm clock 🤖",
@@ -44,9 +45,10 @@ struct OnboardingView: View {
 
     private var mainContent: some View {
         VStack(spacing: 0) {
-            Spacer()
+            Spacer().frame(maxHeight: 32)
 
             speechBubble
+                .opacity(showBubble ? 1 : 0)
 
             Spacer().frame(height: MRSpacing.xs)
 
@@ -59,13 +61,16 @@ struct OnboardingView: View {
                 .font(.mrHeading)
                 .foregroundColor(.white)
 
-            Spacer()
+            Spacer().frame(maxHeight: 32)
 
             bottomStack
         }
         .onAppear {
             withAnimation(.spring(response: 2.5, dampingFraction: 0.8).delay(0.5)) {
                 robotOffset = 0
+            }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
+                withAnimation { showBubble = true }
             }
         }
         .onReceive(Timer.publish(every: 10, on: .main, in: .common).autoconnect()) { _ in
@@ -109,7 +114,7 @@ struct OnboardingView: View {
         Button(action: requestCalendarAccess) {
             HStack(spacing: MRSpacing.sm) {
                 Image(systemName: "apple.logo")
-                    .font(.system(size: 16, weight: .medium))
+                    .font(.system(size: 22, weight: .medium))
                 Text("Continue with Apple")
                     .font(.system(.body, design: .default).weight(.medium))
             }
@@ -126,7 +131,7 @@ struct OnboardingView: View {
         Button(action: connectGoogleCalendar) {
             HStack(spacing: MRSpacing.sm) {
                 Text("G")
-                    .font(.system(.body, design: .default).weight(.bold))
+                    .font(.system(size: 22, weight: .bold))
                     .foregroundColor(Color(hex: "4285F4"))
                 Text("Continue with Google")
                     .font(.system(.body, design: .default).weight(.medium))
