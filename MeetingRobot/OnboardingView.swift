@@ -107,11 +107,11 @@ struct OnboardingView: View {
                     .opacity(bubbleVisible ? 1 : 0)
 
                 RobotAnimationView()
-                    .offset(y: -20)
+                    .padding(.bottom, -35)
             }
             .offset(x: robotOffset)
 
-            Spacer().frame(height: -30)
+            Spacer().frame(height: 0)
 
             Text("Meetbot")
                 .font(.mrHeading)
