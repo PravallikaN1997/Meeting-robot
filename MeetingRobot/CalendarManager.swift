@@ -70,7 +70,9 @@ class CalendarManager: ObservableObject {
     private nonisolated(unsafe) var refreshTimer: Timer?
 
     init() {
-        checkAuthorization()
+        Task {
+            await requestAccess()
+        }
         startRefreshTimer()
     }
 
