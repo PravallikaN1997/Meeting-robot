@@ -111,7 +111,7 @@ struct OnboardingView: View {
             }
             .offset(x: robotOffset)
 
-            Spacer().frame(height: 4)
+            Spacer().frame(height: -30)
 
             Text("Meetbot")
                 .font(.mrHeading)
@@ -134,7 +134,7 @@ struct OnboardingView: View {
                 .lineLimit(2)
                 .padding(.horizontal, 24)
 
-            Spacer().frame(height: 24)
+            Spacer().frame(height: 32)
 
             appleButton
 
