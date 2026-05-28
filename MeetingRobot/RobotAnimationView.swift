@@ -10,16 +10,13 @@ struct RobotAnimationView: View {
             if isDarkMode {
                 Circle()
                     .fill(Color.blue.opacity(0.30))
-                    .blur(radius: 20)
-                    .frame(width: 60, height: 60)
+                    .blur(radius: 24)
+                    .frame(width: 80, height: 80)
             }
             _LottieNSView(loopMode: loopMode)
-                .frame(width: 346, height: 346)
-                .scaleEffect(0.231)
-                .frame(width: 80, height: 80)
+                .frame(width: 120, height: 120)
         }
-        .frame(width: 80, height: 80)
-        .clipped()
+        .frame(width: 120, height: 120)
     }
 }
 
@@ -30,6 +27,7 @@ private struct _LottieNSView: NSViewRepresentable {
         let view = LottieAnimationView(name: "robot")
         view.contentMode = .scaleAspectFit
         view.loopMode = loopMode
+        view.animationSpeed = 1.0
         view.play()
         return view
     }
