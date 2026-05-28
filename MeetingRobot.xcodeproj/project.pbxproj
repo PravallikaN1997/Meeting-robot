@@ -41,6 +41,8 @@
 		GG001112FC76A190054E80E /* MenuBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = GG002222FC76A190054E80E /* MenuBarView.swift */; };
 		HH001112FC76A190054E80E /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = HH002222FC76A190054E80E /* DashboardView.swift */; };
 		II001112FC76A190054E80E /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = II002222FC76A190054E80E /* SettingsView.swift */; };
+		JJ001112FC76A190054E80E /* OverlayWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = JJ002222FC76A190054E80E /* OverlayWindowController.swift */; };
+		KK001112FC76A190054E80E /* OverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = KK002222FC76A190054E80E /* OverlayView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -62,6 +64,8 @@
 		GG002222FC76A190054E80E /* MenuBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarView.swift; sourceTree = "<group>"; };
 		HH002222FC76A190054E80E /* DashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardView.swift; sourceTree = "<group>"; };
 		II002222FC76A190054E80E /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		JJ002222FC76A190054E80E /* OverlayWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayWindowController.swift; sourceTree = "<group>"; };
+		KK002222FC76A190054E80E /* OverlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -118,6 +122,8 @@
 				GG002222FC76A190054E80E /* MenuBarView.swift */,
 				HH002222FC76A190054E80E /* DashboardView.swift */,
 				II002222FC76A190054E80E /* SettingsView.swift */,
+				JJ002222FC76A190054E80E /* OverlayWindowController.swift */,
+				KK002222FC76A190054E80E /* OverlayView.swift */,
 				BB009992FC76A190054E80E /* Assets.xcassets */,
 				BB00AAA2FC76A190054E80E /* MeetingRobot.entitlements */,
 			);
@@ -247,6 +253,8 @@
 				GG001112FC76A190054E80E /* MenuBarView.swift in Sources */,
 				HH001112FC76A190054E80E /* DashboardView.swift in Sources */,
 				II001112FC76A190054E80E /* SettingsView.swift in Sources */,
+				JJ001112FC76A190054E80E /* OverlayWindowController.swift in Sources */,
+				KK001112FC76A190054E80E /* OverlayView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

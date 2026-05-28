@@ -10,6 +10,10 @@ struct MeetingRobotApp: App {
         WindowGroup {
             ContentView()
                 .environmentObject(calendarManager)
+                .onAppear {
+                    OverlayWindowController.shared
+                        .startMonitoring(calendarManager: calendarManager)
+                }
         }
         .windowStyle(.hiddenTitleBar)
         .windowResizability(.contentSize)
