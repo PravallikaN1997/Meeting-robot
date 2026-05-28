@@ -16,10 +16,6 @@ struct ContentView: View {
                 .frame(width: 600, height: 540)
             }
         }
-        .onAppear {
-            // TEMP: force onboarding for testing
-            hasCompletedOnboarding = false
-        }
     }
 }
 
