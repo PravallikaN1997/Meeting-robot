@@ -2,7 +2,7 @@ import AppKit
 import SwiftUI
 
 class OverlayWindowController: NSObject {
-    private var overlayWindow: NSWindow?
+    private var overlayWindow: NSPanel?
     private var checkTimer: Timer?
     private var dismissedMeetingIds: Set<String> = []
 
@@ -49,9 +49,9 @@ class OverlayWindowController: NSObject {
             height: windowHeight
         )
 
-        let window = NSWindow(
+        let window = NSPanel(
             contentRect: windowFrame,
-            styleMask: [.borderless],
+            styleMask: [.borderless, .nonactivatingPanel],
             backing: .buffered,
             defer: false
         )
@@ -63,6 +63,10 @@ class OverlayWindowController: NSObject {
         window.collectionBehavior = [
             .canJoinAllSpaces, .fullScreenAuxiliary
         ]
+        window.isMovableByWindowBackground = false
+        window.level = NSWindow.Level(
+            rawValue: Int(CGWindowLevelForKey(.floatingWindow))
+        )
 
         let overlayView = OverlayView(
             meeting: meeting,
