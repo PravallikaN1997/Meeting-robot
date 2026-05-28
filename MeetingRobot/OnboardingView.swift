@@ -102,7 +102,7 @@ struct OnboardingView: View {
     private var cardContent: some View {
         VStack(spacing: 0) {
             // Robot + bubble travel together during walk-in
-            VStack(spacing: 4) {
+            VStack(spacing: 2) {
                 speechBubble
                     .opacity(bubbleVisible ? 1 : 0)
 
@@ -110,7 +110,7 @@ struct OnboardingView: View {
             }
             .offset(x: robotOffset)
 
-            Spacer().frame(height: 4)
+            Spacer().frame(height: 2)
 
             Text("Meetbot")
                 .font(.mrHeading)
