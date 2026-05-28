@@ -20,13 +20,13 @@ struct ConfirmationView: View {
 
             // Card
             VStack(spacing: 0) {
-                Spacer().frame(height: 32)
+                Spacer().frame(height: 24)
 
                 // Celebration Lottie
                 CelebrationView()
-                    .frame(width: 160, height: 200)
+                    .frame(width: 160, height: 180)
 
-                Spacer().frame(height: 8)
+                Spacer().frame(height: 24)
 
                 // Title
                 HStack(spacing: 6) {
