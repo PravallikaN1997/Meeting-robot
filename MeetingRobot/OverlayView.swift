@@ -3,151 +3,150 @@ import Lottie
 
 struct OverlayView: View {
     let meeting: Meeting
-    let onDismiss: () -> Void
-    @AppStorage("isDarkMode") var isDarkMode: Bool = false
-    @State private var robotOffset: CGFloat = 60
+    let screenWidth: CGFloat
+    let onFinished: () -> Void
+
+    @State private var robotX: CGFloat = -100
+    @State private var showBubble: Bool = false
+    @State private var bubbleText: String = ""
+    @State private var clickMessageIndex: Int = 0
+    @State private var isClickMessage: Bool = false
+
+    private let clickMessages = [
+        "Yes yes, I know you're busy 😅",
+        "Still here... tick tock ⏰",
+        "Your meeting called, it misses you 📞",
+        "I'm just a robot, don't shoot the messenger 🤖"
+    ]
 
     var body: some View {
-        HStack(alignment: .bottom, spacing: 0) {
-            // Robot
-            ZStack(alignment: .top) {
-                // Speech bubble above robot
-                VStack(spacing: 0) {
-                    speechBubble
-                    Spacer().frame(height: 4)
-                }
-                .offset(y: -70)
+        ZStack(alignment: .bottomLeading) {
+            Color.clear
+                .allowsHitTesting(false)
 
-                // Robot animation
-                OverlayRobotView()
-                    .frame(width: 70, height: 70)
-                    .offset(y: robotOffset)
+            VStack(spacing: 0) {
+                if showBubble {
+                    bubbleView(text: bubbleText)
+                        .transition(.scale(scale: 0.8)
+                            .combined(with: .opacity))
+                }
+                Spacer().frame(height: 4)
+                WalkingRobotView()
+                    .frame(width: 80, height: 80)
+                    .onTapGesture { handleTap() }
             }
-            .frame(width: 80, height: 140)
-            .onAppear {
-                withAnimation(.spring(
-                    response: 0.6,
-                    dampingFraction: 0.7
-                )) {
-                    robotOffset = 0
-                }
-            }
-
-            // Info card
-            VStack(alignment: .leading, spacing: 6) {
-                Text("Starting soon")
-                    .font(.system(size: 10, weight: .semibold))
-                    .foregroundColor(.orange)
-                    .textCase(.uppercase)
-
-                Text(meeting.title)
-                    .font(.system(size: 13, weight: .bold))
-                    .foregroundColor(
-                        isDarkMode ? .white : Color(hex: "1C1C2E")
-                    )
-                    .lineLimit(1)
-
-                HStack(spacing: 4) {
-                    Image(systemName: "clock")
-                        .font(.system(size: 10))
-                    Text(meeting.countdownLabel)
-                        .font(.system(size: 11))
-                    if let loc = meeting.location, !loc.isEmpty {
-                        Text("·")
-                        Text(loc)
-                            .font(.system(size: 11))
-                            .lineLimit(1)
-                    }
-                }
-                .foregroundColor(.secondary)
-
-                Button(action: onDismiss) {
-                    Text("Dismiss")
-                        .font(.system(size: 11, weight: .medium))
-                        .padding(.horizontal, 12)
-                        .padding(.vertical, 5)
-                        .background(
-                            RoundedRectangle(cornerRadius: 6)
-                                .fill(Color.secondary.opacity(0.15))
-                        )
-                        .foregroundColor(.secondary)
-                }
-                .buttonStyle(.plain)
-            }
-            .padding(.leading, 8)
-            .padding(.bottom, 12)
+            .frame(width: 200, height: 130, alignment: .bottom)
+            .offset(x: robotX)
+            .animation(.linear(duration: 0.1), value: robotX)
         }
-        .padding(.horizontal, 12)
-        .padding(.top, 70)
-        .background(
-            RoundedRectangle(cornerRadius: 16)
-                .fill(isDarkMode ?
-                      Color(hex: "1A1A1E") : Color.white)
-                .shadow(
-                    color: .black.opacity(0.18),
-                    radius: 12,
-                    y: 4
-                )
-        )
-        .preferredColorScheme(isDarkMode ? .dark : .light)
+        .frame(width: screenWidth, height: 140)
+        .onAppear { startSequence() }
     }
 
-    private var speechBubble: some View {
+    private func startSequence() {
+        robotX = -100
+        bubbleText = "\(meeting.title) in \(meeting.countdownLabel)!"
+
+        // Walk in slowly
+        withAnimation(.linear(duration: 8)) {
+            robotX = screenWidth * 0.25
+        }
+
+        // Show bubble after robot arrives
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+            withAnimation(.spring(response: 0.4)) {
+                showBubble = true
+            }
+        }
+
+        // Hide bubble after 10s
+        DispatchQueue.main.asyncAfter(deadline: .now() + 13) {
+            if !isClickMessage {
+                withAnimation(.easeInOut(duration: 0.4)) {
+                    showBubble = false
+                }
+            }
+        }
+
+        // Walk off to right after 15s
+        DispatchQueue.main.asyncAfter(deadline: .now() + 15) {
+            withAnimation(.linear(duration: 8)) {
+                robotX = screenWidth + 200
+            }
+        }
+
+        // Finished after full walk
+        DispatchQueue.main.asyncAfter(deadline: .now() + 24) {
+            onFinished()
+        }
+    }
+
+    private func handleTap() {
+        isClickMessage = true
+        bubbleText = clickMessages[
+            clickMessageIndex % clickMessages.count
+        ]
+        clickMessageIndex += 1
+        withAnimation(.spring(response: 0.3)) {
+            showBubble = true
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 10) {
+            withAnimation(.easeInOut(duration: 0.4)) {
+                showBubble = false
+            }
+            isClickMessage = false
+        }
+    }
+
+    private func bubbleView(text: String) -> some View {
         VStack(spacing: 0) {
-            Text("You have a meeting \(meeting.countdownLabel)!")
-                .font(.system(size: 11))
+            Text(text)
+                .font(.system(size: 12, weight: .medium))
                 .foregroundColor(Color(hex: "1C1C2E"))
                 .multilineTextAlignment(.center)
-                .padding(.horizontal, 10)
-                .padding(.vertical, 7)
+                .padding(.horizontal, 12)
+                .padding(.vertical, 8)
                 .background(
-                    RoundedRectangle(cornerRadius: 8)
+                    RoundedRectangle(cornerRadius: 10)
                         .fill(Color.white)
-                        .shadow(
-                            color: .black.opacity(0.1),
-                            radius: 4
-                        )
+                        .shadow(color: .black.opacity(0.15),
+                                radius: 6, y: 2)
                 )
-            // Bubble pointer
-            Triangle()
+            BubbleTriangle()
                 .fill(Color.white)
-                .frame(width: 8, height: 5)
+                .frame(width: 10, height: 7)
                 .offset(y: -0.5)
         }
     }
 }
 
-// MARK: - Triangle shape
-
-private struct Triangle: Shape {
+private struct BubbleTriangle: Shape {
     func path(in rect: CGRect) -> Path {
-        var path = Path()
-        path.move(to: CGPoint(x: 0, y: 0))
-        path.addLine(to: CGPoint(x: rect.midX, y: rect.maxY))
-        path.addLine(to: CGPoint(x: rect.maxX, y: 0))
-        path.closeSubpath()
-        return path
+        var p = Path()
+        p.move(to: CGPoint(x: 0, y: 0))
+        p.addLine(to: CGPoint(x: rect.midX, y: rect.maxY))
+        p.addLine(to: CGPoint(x: rect.maxX, y: 0))
+        p.closeSubpath()
+        return p
     }
 }
 
-// MARK: - Overlay Robot (smaller version)
-
-private struct OverlayRobotView: View {
+struct WalkingRobotView: View {
     var body: some View {
-        _OverlayLottieView()
+        _WalkingRobotNSView()
             .frame(width: 346, height: 346)
-            .scaleEffect(0.202)
-            .frame(width: 70, height: 70)
+            .scaleEffect(0.231)
+            .frame(width: 80, height: 80)
             .clipped()
     }
 }
 
-private struct _OverlayLottieView: NSViewRepresentable {
+struct _WalkingRobotNSView: NSViewRepresentable {
     func makeNSView(context: Context) -> LottieAnimationView {
         let view = LottieAnimationView(name: "robot")
         view.contentMode = .scaleAspectFit
         view.loopMode = .loop
-        view.animationSpeed = 1.0
+        view.animationSpeed = 0.8
         view.play()
         return view
     }
