@@ -3,7 +3,6 @@ import SwiftUI
 @main
 struct MeetingRobotApp: App {
     @StateObject private var calendarManager = CalendarManager.shared
-    @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding = false
 
     var body: some Scene {
         // Main window — only shown during onboarding
