@@ -111,7 +111,7 @@ struct OnboardingView: View {
             }
             .offset(x: robotOffset)
 
-            Spacer().frame(height: -10)
+            Spacer().frame(height: 8)
 
             Text("Meetbot")
                 .font(.mrHeading)
