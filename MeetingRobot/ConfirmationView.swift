@@ -109,11 +109,32 @@ private struct CelebrationView: View {
 
 private struct _CelebrationNSView: NSViewRepresentable {
     func makeNSView(context: Context) -> LottieAnimationView {
-        let view = LottieAnimationView(name: "celebrate")
-        view.contentMode = .scaleAspectFit
-        view.loopMode = .loop
-        view.animationSpeed = 1.0
-        view.play()
+        // Try loading by name first
+        if let animation = LottieAnimation.named("celebrate") {
+            let view = LottieAnimationView(animation: animation)
+            view.contentMode = .scaleAspectFit
+            view.loopMode = .loop
+            view.animationSpeed = 1.0
+            view.play()
+            print("✅ celebrate.json loaded successfully")
+            return view
+        }
+
+        // Fallback: try loading from bundle directly
+        if let path = Bundle.main.path(forResource: "celebrate",
+                                        ofType: "json"),
+           let animation = LottieAnimation.filepath(path) {
+            let view = LottieAnimationView(animation: animation)
+            view.contentMode = .scaleAspectFit
+            view.loopMode = .loop
+            view.animationSpeed = 1.0
+            view.play()
+            print("✅ celebrate.json loaded from bundle path")
+            return view
+        }
+
+        print("❌ celebrate.json failed to load")
+        let view = LottieAnimationView()
         return view
     }
     func updateNSView(_ nsView: LottieAnimationView,
