@@ -25,8 +25,9 @@ struct ConfirmationView: View {
                 // Celebration Lottie
                 CelebrationView()
                     .frame(width: 160, height: 180)
+                    .padding(.bottom, 16)
 
-                Spacer().frame(height: 24)
+                Spacer().frame(height: 20)
 
                 // Title
                 HStack(spacing: 6) {
