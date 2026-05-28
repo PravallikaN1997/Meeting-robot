@@ -1,4 +1,5 @@
 import SwiftUI
+import EventKit
 
 struct MenuBarView: View {
     @EnvironmentObject var calendarManager: CalendarManager
