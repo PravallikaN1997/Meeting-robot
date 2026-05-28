@@ -11,6 +11,18 @@ struct OverlayView: View {
     @State private var bubbleText: String = ""
     @State private var clickMessageIndex: Int = 0
     @State private var isClickMessage: Bool = false
+    @State private var walkTimer: Timer? = nil
+    @State private var phase: WalkPhase = .walkingIn
+
+    enum WalkPhase {
+        case walkingIn, stopped, walkingOut, done
+    }
+
+    // Speed: pixels per second
+    // Screen ~1500px wide, walking at 60px/s = 25 seconds to cross
+    private let walkSpeed: CGFloat = 55
+    private let stopAtX: CGFloat = 300
+    private let timerInterval: CGFloat = 0.016 // ~60fps
 
     private let clickMessages = [
         "Yes yes, I know you're busy 😅",
@@ -21,8 +33,7 @@ struct OverlayView: View {
 
     var body: some View {
         ZStack(alignment: .bottomLeading) {
-            Color.clear
-                .allowsHitTesting(false)
+            Color.clear.allowsHitTesting(false)
 
             VStack(spacing: 0) {
                 if showBubble {
@@ -37,46 +48,63 @@ struct OverlayView: View {
             }
             .frame(width: 200, height: 130, alignment: .bottom)
             .offset(x: robotX)
-            .animation(.linear(duration: 0.1), value: robotX)
         }
         .frame(width: screenWidth, height: 140)
-        .onAppear { startSequence() }
+        .onAppear { startWalking() }
+        .onDisappear { walkTimer?.invalidate() }
     }
 
-    private func startSequence() {
+    private func startWalking() {
         robotX = -100
         bubbleText = "\(meeting.title) in \(meeting.countdownLabel)!"
+        phase = .walkingIn
 
-        // Phase 1: Walk from left edge to 30% of screen
-        // Human walking pace — very slow and natural
-        withAnimation(.linear(duration: 12)) {
-            robotX = screenWidth * 0.30
-        }
+        walkTimer = Timer.scheduledTimer(
+            withTimeInterval: timerInterval,
+            repeats: true
+        ) { _ in
+            let step = walkSpeed * timerInterval
 
-        // Show bubble when robot reaches 30%
-        DispatchQueue.main.asyncAfter(deadline: .now() + 12) {
-            withAnimation(.spring(response: 0.5)) {
-                showBubble = true
-            }
-        }
-
-        // Phase 2: Stay at 30% for 12 seconds while bubble shows
-        // Then continue walking to right edge — same slow pace
-        DispatchQueue.main.asyncAfter(deadline: .now() + 24) {
-            if !isClickMessage {
-                withAnimation(.easeInOut(duration: 0.5)) {
-                    showBubble = false
+            switch phase {
+            case .walkingIn:
+                if robotX < stopAtX {
+                    robotX += step
+                } else {
+                    robotX = stopAtX
+                    phase = .stopped
+                    // Show bubble
+                    withAnimation(.spring(response: 0.4)) {
+                        showBubble = true
+                    }
+                    // Hide bubble and start walking out after 12s
+                    DispatchQueue.main.asyncAfter(
+                        deadline: .now() + 12
+                    ) {
+                        if !isClickMessage {
+                            withAnimation(.easeInOut(duration: 0.4)) {
+                                showBubble = false
+                            }
+                        }
+                        DispatchQueue.main.asyncAfter(
+                            deadline: .now() + 1
+                        ) {
+                            phase = .walkingOut
+                        }
+                    }
                 }
-            }
-            // Walk remaining 70% of screen at same pace
-            withAnimation(.linear(duration: 28)) {
-                robotX = screenWidth + 120
-            }
-        }
 
-        // Clean up after robot exits
-        DispatchQueue.main.asyncAfter(deadline: .now() + 55) {
-            onFinished()
+            case .walkingOut:
+                if robotX < screenWidth + 120 {
+                    robotX += step
+                } else {
+                    phase = .done
+                    walkTimer?.invalidate()
+                    onFinished()
+                }
+
+            case .stopped, .done:
+                break
+            }
         }
     }
 
@@ -145,7 +173,7 @@ struct _WalkingRobotNSView: NSViewRepresentable {
         let view = LottieAnimationView(name: "robot")
         view.contentMode = .scaleAspectFit
         view.loopMode = .loop
-        view.animationSpeed = 0.35
+        view.animationSpeed = 0.6
         view.play()
         return view
     }
