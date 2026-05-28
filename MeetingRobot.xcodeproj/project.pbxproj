@@ -23,6 +23,7 @@
 		FF001112FC76A190054E80E /* CalendarManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF002222FC76A190054E80E /* CalendarManager.swift */; };
 		GG001112FC76A190054E80E /* MenuBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = GG002222FC76A190054E80E /* MenuBarView.swift */; };
 		HH001112FC76A190054E80E /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = HH002222FC76A190054E80E /* DashboardView.swift */; };
+		II001112FC76A190054E80E /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = II002222FC76A190054E80E /* SettingsView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -43,6 +44,7 @@
 		FF002222FC76A190054E80E /* CalendarManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarManager.swift; sourceTree = "<group>"; };
 		GG002222FC76A190054E80E /* MenuBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarView.swift; sourceTree = "<group>"; };
 		HH002222FC76A190054E80E /* DashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardView.swift; sourceTree = "<group>"; };
+		II002222FC76A190054E80E /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -90,6 +92,7 @@
 				FF002222FC76A190054E80E /* CalendarManager.swift */,
 				GG002222FC76A190054E80E /* MenuBarView.swift */,
 				HH002222FC76A190054E80E /* DashboardView.swift */,
+				II002222FC76A190054E80E /* SettingsView.swift */,
 				BB009992FC76A190054E80E /* Assets.xcassets */,
 				BB00AAA2FC76A190054E80E /* MeetingRobot.entitlements */,
 			);
@@ -186,6 +189,7 @@
 				FF001112FC76A190054E80E /* CalendarManager.swift in Sources */,
 				GG001112FC76A190054E80E /* MenuBarView.swift in Sources */,
 				HH001112FC76A190054E80E /* DashboardView.swift in Sources */,
+				II001112FC76A190054E80E /* SettingsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

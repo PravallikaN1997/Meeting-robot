@@ -5,6 +5,9 @@ struct MenuBarView: View {
     @EnvironmentObject var calendarManager: CalendarManager
     @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding = false
     @AppStorage("isDarkMode") private var isDarkMode = false
+    @AppStorage("showTomorrowMeetings") var showTomorrow: Bool = true
+    @AppStorage("reminderMinutes") var reminderMinutes: Int = 5
+    @State private var showSettings: Bool = false
 
     var body: some View {
         VStack(spacing: 0) {
@@ -54,6 +57,31 @@ struct MenuBarView: View {
             }
             .frame(maxHeight: 280)
 
+            if showTomorrow && !calendarManager.tomorrowMeetings.isEmpty {
+                Divider()
+                HStack {
+                    Text("Tomorrow")
+                        .font(.system(size: 11, weight: .semibold))
+                        .foregroundColor(.secondary)
+                    Spacer()
+                }
+                .padding(.horizontal, 14)
+                .padding(.top, 10)
+                .padding(.bottom, 4)
+
+                ForEach(calendarManager.tomorrowMeetings.prefix(3)) { meeting in
+                    MeetingRowView(meeting: meeting)
+                }
+
+                if calendarManager.tomorrowMeetings.count > 3 {
+                    Text("+\(calendarManager.tomorrowMeetings.count - 3) more")
+                        .font(.system(size: 11))
+                        .foregroundColor(.secondary)
+                        .padding(.horizontal, 14)
+                        .padding(.bottom, 8)
+                }
+            }
+
             Divider()
 
             // Footer
@@ -63,13 +91,14 @@ struct MenuBarView: View {
                     .font(.system(size: 11))
                     .foregroundColor(.secondary)
                 Spacer()
-                Button("Settings") { }
+                Button("Settings") { showSettings.toggle() }
                     .buttonStyle(.plain)
                     .font(.system(size: 11))
                     .foregroundColor(.secondary)
             }
             .padding(.horizontal, 14)
             .padding(.vertical, 10)
+            .popover(isPresented: $showSettings) { SettingsView() }
         }
         .frame(width: 300)
         .background(Color(NSColor.windowBackgroundColor))
