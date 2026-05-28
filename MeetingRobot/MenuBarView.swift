@@ -59,26 +59,33 @@ struct MenuBarView: View {
 
             if showTomorrow && !calendarManager.tomorrowMeetings.isEmpty {
                 Divider()
+
                 HStack {
                     Text("Tomorrow")
                         .font(.system(size: 11, weight: .semibold))
                         .foregroundColor(.secondary)
                     Spacer()
+                    Text("\(calendarManager.tomorrowMeetings.count) meetings")
+                        .font(.system(size: 10))
+                        .foregroundColor(.secondary)
                 }
                 .padding(.horizontal, 14)
                 .padding(.top, 10)
-                .padding(.bottom, 4)
+                .padding(.bottom, 2)
 
                 ForEach(calendarManager.tomorrowMeetings.prefix(3)) { meeting in
                     MeetingRowView(meeting: meeting)
+                    if meeting.id != calendarManager.tomorrowMeetings.prefix(3).last?.id {
+                        Divider().padding(.leading, 14)
+                    }
                 }
 
                 if calendarManager.tomorrowMeetings.count > 3 {
-                    Text("+\(calendarManager.tomorrowMeetings.count - 3) more")
+                    Text("+ \(calendarManager.tomorrowMeetings.count - 3) more tomorrow")
                         .font(.system(size: 11))
                         .foregroundColor(.secondary)
                         .padding(.horizontal, 14)
-                        .padding(.bottom, 8)
+                        .padding(.vertical, 8)
                 }
             }
 
@@ -112,31 +119,42 @@ struct MenuBarView: View {
         HStack(spacing: 10) {
             RoundedRectangle(cornerRadius: 3)
                 .fill(meeting.calendarColor)
-                .frame(width: 4, height: 36)
+                .frame(width: 4, height: 40)
 
-            VStack(alignment: .leading, spacing: 2) {
+            VStack(alignment: .leading, spacing: 3) {
+                Text(meeting.isHappeningNow ? "Happening Now" : "Up Next")
+                    .font(.system(size: 10, weight: .semibold))
+                    .foregroundColor(meeting.isHappeningNow ? .green : .orange)
+                    .textCase(.uppercase)
                 Text(meeting.title)
-                    .font(.system(size: 12, weight: .medium))
+                    .font(.system(size: 13, weight: .semibold))
                     .lineLimit(1)
                 Text("\(meeting.timeLabel) · \(meeting.countdownLabel)")
                     .font(.system(size: 11))
                     .foregroundColor(.secondary)
             }
+
             Spacer()
+
             Text(meeting.countdownLabel)
-                .font(.system(size: 11, weight: .semibold))
+                .font(.system(size: 12, weight: .bold))
                 .foregroundColor(meeting.isHappeningNow ? .green : .orange)
-                .padding(.horizontal, 8)
-                .padding(.vertical, 4)
+                .padding(.horizontal, 10)
+                .padding(.vertical, 5)
                 .background(
-                    RoundedRectangle(cornerRadius: 6)
+                    RoundedRectangle(cornerRadius: 8)
                         .fill(meeting.isHappeningNow ?
-                              Color.green.opacity(0.15) :
-                              Color.orange.opacity(0.15))
+                              Color.green.opacity(0.12) :
+                              Color.orange.opacity(0.12))
                 )
         }
         .padding(.horizontal, 14)
         .padding(.vertical, 10)
+        .background(
+            meeting.isHappeningNow ?
+            Color.green.opacity(0.05) :
+            Color.orange.opacity(0.05)
+        )
     }
 
     // MARK: - Permission request
