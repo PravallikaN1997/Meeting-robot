@@ -1,3 +1,4 @@
+import AppKit
 import SwiftUI
 import Lottie
 
@@ -13,6 +14,8 @@ struct OverlayView: View {
     @State private var isClickMessage: Bool = false
     @State private var walkTimer: Timer? = nil
     @State private var phase: WalkPhase = .walkingIn
+    @State private var isHovering: Bool = false
+    @State private var cursorOffset: CGSize = .zero
 
     enum WalkPhase {
         case walkingIn, stopped, walkingOut, done
@@ -41,10 +44,35 @@ struct OverlayView: View {
                         .transition(.scale(scale: 0.8)
                             .combined(with: .opacity))
                 }
-                Spacer().frame(height: 4)
-                WalkingRobotView()
-                    .frame(width: 80, height: 80)
-                    .onTapGesture { handleTap() }
+                Spacer().frame(height: 0)
+                ZStack {
+                    WalkingRobotView()
+                        .frame(width: 80, height: 80)
+
+                    // Fun cursor animation on hover
+                    if isHovering {
+                        _CursorLottieView()
+                            .frame(width: 346, height: 346)
+                            .scaleEffect(0.12)
+                            .frame(width: 42, height: 42)
+                            .clipped()
+                            .offset(x: 30, y: -30)
+                            .transition(.scale(scale: 0.5)
+                                .combined(with: .opacity))
+                            .allowsHitTesting(false)
+                    }
+                }
+                .onTapGesture { handleTap() }
+                .onHover { hovering in
+                    withAnimation(.spring(response: 0.3)) {
+                        isHovering = hovering
+                    }
+                    if hovering {
+                        NSCursor.pointingHand.push()
+                    } else {
+                        NSCursor.pop()
+                    }
+                }
             }
             .frame(width: 200, height: 130, alignment: .bottom)
             .offset(x: robotX)
@@ -72,7 +100,7 @@ struct OverlayView: View {
                 } else {
                     robotX = stopAtX
                     phase = .stopped
-                    // Show bubble
+                    NSSound(named: NSSound.Name("Funk"))?.play()
                     withAnimation(.spring(response: 0.4)) {
                         showBubble = true
                     }
@@ -174,6 +202,19 @@ struct _WalkingRobotNSView: NSViewRepresentable {
         view.contentMode = .scaleAspectFit
         view.loopMode = .loop
         view.animationSpeed = 0.6
+        view.play()
+        return view
+    }
+    func updateNSView(_ nsView: LottieAnimationView,
+                      context: Context) {}
+}
+
+private struct _CursorLottieView: NSViewRepresentable {
+    func makeNSView(context: Context) -> LottieAnimationView {
+        let view = LottieAnimationView(name: "cursor-animation")
+        view.contentMode = .scaleAspectFit
+        view.loopMode = .loop
+        view.animationSpeed = 1.0
         view.play()
         return view
     }

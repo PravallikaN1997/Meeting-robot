@@ -43,6 +43,8 @@
 		II001112FC76A190054E80E /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = II002222FC76A190054E80E /* SettingsView.swift */; };
 		JJ001112FC76A190054E80E /* OverlayWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = JJ002222FC76A190054E80E /* OverlayWindowController.swift */; };
 		KK001112FC76A190054E80E /* OverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = KK002222FC76A190054E80E /* OverlayView.swift */; };
+		LL001112FC76A190054E80E /* cursor-animation.json in Resources */ = {isa = PBXBuildFile; fileRef = LL002222FC76A190054E80E /* cursor-animation.json */; };
+		MM001112FC76A190054E80E /* cursor-animation.json in Resources */ = {isa = PBXBuildFile; fileRef = LL002222FC76A190054E80E /* cursor-animation.json */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -56,6 +58,7 @@
 		BB006662FC76A190054E80E /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		BB007772FC76A190054E80E /* ConfirmationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmationView.swift; sourceTree = "<group>"; };
 		BB008882FC76A190054E80E /* robot.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = robot.json; sourceTree = "<group>"; };
+		LL002222FC76A190054E80E /* cursor-animation.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "cursor-animation.json"; sourceTree = "<group>"; };
 		BB009992FC76A190054E80E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		BB00AAA2FC76A190054E80E /* MeetingRobot.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MeetingRobot.entitlements; sourceTree = "<group>"; };
 		DD002222FC76A190054E80E /* FluidGradientBackground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FluidGradientBackground.swift; sourceTree = "<group>"; };
@@ -117,6 +120,7 @@
 				BB007772FC76A190054E80E /* ConfirmationView.swift */,
 				DD002222FC76A190054E80E /* FluidGradientBackground.swift */,
 				BB008882FC76A190054E80E /* robot.json */,
+				LL002222FC76A190054E80E /* cursor-animation.json */,
 				EE001112FC76A190054E80E /* robot-bg.mp4 */,
 				FF002222FC76A190054E80E /* CalendarManager.swift */,
 				GG002222FC76A190054E80E /* MenuBarView.swift */,
@@ -217,6 +221,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CC008882FC76A190054E80E /* robot.json in Resources */,
+				LL001112FC76A190054E80E /* cursor-animation.json in Resources */,
 				858F77332FC88F3100517186 /* SettingsView.swift in Resources */,
 				EE002222FC76A190054E80E /* robot-bg.mp4 in Resources */,
 				CC009992FC76A190054E80E /* Assets.xcassets in Resources */,
@@ -228,6 +233,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				858F77472FC8934500517186 /* robot.json in Resources */,
+				MM001112FC76A190054E80E /* cursor-animation.json in Resources */,
 				858F77482FC8934500517186 /* SettingsView.swift in Resources */,
 				858F77492FC8934500517186 /* robot-bg.mp4 in Resources */,
 				858F774A2FC8934500517186 /* Assets.xcassets in Resources */,
