@@ -1,40 +1,132 @@
 import SwiftUI
+import Lottie
 
 struct ConfirmationView: View {
     @Binding var hasCompletedOnboarding: Bool
+    @AppStorage("isDarkMode") var isDarkMode: Bool = false
 
     var body: some View {
-        VStack(spacing: 0) {
-            Spacer()
+        ZStack {
+            // Same background as onboarding
+            LoopingVideoView(videoName: "robot-bg", videoExtension: "mp4")
+                .ignoresSafeArea()
 
-            RobotAnimationView()
-                .frame(width: 220, height: 220)
+            Rectangle()
+                .fill(.ultraThinMaterial)
+                .ignoresSafeArea()
 
-            Spacer().frame(height: MRSpacing.xl)
+            Color.black.opacity(0.35)
+                .ignoresSafeArea()
 
-            Text("You're all set!")
-                .font(.mrHeading)
-                .foregroundColor(.mrTextPrimary)
+            // Card
+            VStack(spacing: 0) {
+                Spacer().frame(height: 32)
 
-            Spacer().frame(height: MRSpacing.md)
+                // Celebration Lottie
+                CelebrationView()
+                    .frame(width: 160, height: 200)
 
-            Text("I'll remind you before every meeting.")
-                .font(.mrSubheading)
-                .foregroundColor(.mrTextSecondary)
+                Spacer().frame(height: 8)
 
-            Spacer().frame(height: MRSpacing.xl + MRSpacing.md)
+                // Title
+                HStack(spacing: 6) {
+                    Text("⭐")
+                        .font(.system(size: 22))
+                    Text("You're all set!")
+                        .font(.system(size: 22, weight: .bold))
+                        .foregroundColor(isDarkMode ? .white : .primary)
+                }
 
-            Button("GET STARTED") {
-                UserDefaults.standard.set(true, forKey: "hasCompletedOnboarding")
-                hasCompletedOnboarding = true
+                Spacer().frame(height: 8)
+
+                // Subtitle
+                Text("I'll remind you before every meeting.")
+                    .font(.system(size: 14))
+                    .foregroundColor(isDarkMode ?
+                        Color.white.opacity(0.55) : .secondary)
+                    .multilineTextAlignment(.center)
+
+                Spacer().frame(height: 32)
+
+                // Get Started button
+                Button(action: {
+                    UserDefaults.standard.set(true,
+                        forKey: "hasCompletedOnboarding")
+                    withAnimation(.easeInOut(duration: 0.4)) {
+                        hasCompletedOnboarding = true
+                    }
+                }) {
+                    Text("Get Started")
+                        .font(.system(size: 16, weight: .semibold))
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 14)
+                        .background(
+                            isDarkMode ?
+                            Color(hex: "F0F0F5") : Color.black
+                        )
+                        .foregroundColor(
+                            isDarkMode ? Color(hex: "111111") : .white
+                        )
+                        .clipShape(Capsule())
+                }
+                .buttonStyle(ScalePressStyle())
+                .padding(.horizontal, 28)
+
+                Spacer().frame(height: 28)
             }
-            .buttonStyle(CyanPillButtonStyle())
-
-            Spacer()
+            .frame(width: 400)
+            .background(
+                RoundedRectangle(cornerRadius: 24)
+                    .fill(isDarkMode ?
+                          Color(hex: "1A1A1E") : Color.white)
+                    .shadow(color: .black.opacity(0.12),
+                            radius: 20, y: 8)
+            )
+            .overlay(
+                RoundedRectangle(cornerRadius: 24)
+                    .stroke(
+                        isDarkMode ?
+                        Color.white.opacity(0.06) : Color.clear,
+                        lineWidth: 1
+                    )
+            )
         }
-        .padding(.horizontal, MRSpacing.xl + MRSpacing.sm)
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color.mrBackground)
+        .preferredColorScheme(isDarkMode ? .dark : .light)
+    }
+}
+
+// MARK: - Celebration Lottie
+
+private struct CelebrationView: View {
+    var body: some View {
+        _CelebrationNSView()
+            .frame(width: 200, height: 250)
+            .scaleEffect(0.8)
+            .frame(width: 160, height: 200)
+            .clipped()
+    }
+}
+
+private struct _CelebrationNSView: NSViewRepresentable {
+    func makeNSView(context: Context) -> LottieAnimationView {
+        let view = LottieAnimationView(name: "celebrate")
+        view.contentMode = .scaleAspectFit
+        view.loopMode = .loop
+        view.animationSpeed = 1.0
+        view.play()
+        return view
+    }
+
+    func updateNSView(_ nsView: LottieAnimationView, context: Context) {}
+}
+
+// ScalePressStyle is private in OnboardingView.swift (file-scoped),
+// so this is a separate declaration — no duplicate at module level.
+private struct ScalePressStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .scaleEffect(configuration.isPressed ? 0.97 : 1.0)
+            .animation(.easeOut(duration: 0.1), value: configuration.isPressed)
     }
 }
 
