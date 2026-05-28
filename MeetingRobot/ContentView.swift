@@ -5,12 +5,20 @@ struct ContentView: View {
     @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding = false
 
     var body: some View {
-        if hasCompletedOnboarding {
-            DashboardView()
-                .environmentObject(calendarManager)
-        } else {
-            OnboardingView(hasCompletedOnboarding: $hasCompletedOnboarding)
+        Group {
+            if hasCompletedOnboarding {
+                DashboardView()
+                    .environmentObject(calendarManager)
+            } else {
+                OnboardingView(
+                    hasCompletedOnboarding: $hasCompletedOnboarding
+                )
                 .frame(width: 600, height: 540)
+            }
+        }
+        .onAppear {
+            // TEMP: force onboarding for testing
+            hasCompletedOnboarding = false
         }
     }
 }
