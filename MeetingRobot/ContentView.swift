@@ -5,7 +5,7 @@ struct ContentView: View {
     @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding = false
 
     var body: some View {
-        Group {
+Group {
             if hasCompletedOnboarding {
                 DashboardView()
                     .environmentObject(calendarManager)
