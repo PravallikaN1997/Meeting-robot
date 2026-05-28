@@ -15,9 +15,9 @@ struct RobotAnimationView: View {
                     .frame(width: 100, height: 100)
             }
             _LottieNSView(loopMode: loopMode)
-                .frame(width: 160, height: 160)
+                .frame(width: 100, height: 100)
         }
-        .frame(width: 160, height: 160)
+        .frame(width: 100, height: 100)
     }
 }
 

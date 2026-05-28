@@ -1,5 +1,4 @@
 import SwiftUI
-import Combine
 import EventKit
 
 struct OnboardingView: View {
@@ -9,6 +8,7 @@ struct OnboardingView: View {
     @State private var messageIndex = 0
     @State private var robotOffset: CGFloat = -500
     @State private var showBubble = false
+    @State private var bubbleVisible: Bool = false
 
     private let messages = [
         "Hey! I'm better than your alarm clock 🤖",
@@ -104,7 +104,7 @@ struct OnboardingView: View {
             // Robot + bubble travel together during walk-in
             VStack(spacing: 8) {
                 speechBubble
-                    .opacity(showBubble ? 1 : 0)
+                    .opacity(bubbleVisible ? 1 : 0)
 
                 RobotAnimationView()
             }
@@ -112,7 +112,7 @@ struct OnboardingView: View {
 
             Spacer().frame(height: MRSpacing.lg)
 
-            Text("Meeting Robot")
+            Text("Meetbot")
                 .font(.mrHeading)
                 .foregroundColor(isDarkMode ? .white : .primary)
                 .multilineTextAlignment(.center)
@@ -124,7 +124,7 @@ struct OnboardingView: View {
                 .foregroundColor(isDarkMode ? Color.white.opacity(0.55) : .secondary)
                 .multilineTextAlignment(.center)
 
-            Spacer().frame(height: 12)
+            Spacer().frame(height: 4)
 
             Text("So I know when your meetings are and can prep you in time.")
                 .font(.caption)
@@ -137,7 +137,7 @@ struct OnboardingView: View {
 
             appleButton
 
-            Spacer().frame(height: MRSpacing.sm)
+            Spacer().frame(height: 12)
 
             googleButton
 
@@ -147,7 +147,7 @@ struct OnboardingView: View {
                     .foregroundColor(.gray)
             }
             .buttonStyle(.plain)
-            .padding(.top, 4)
+            .padding(.top, 20)
         }
         .padding(.horizontal, 28)
         .padding(.top, 28)
@@ -160,12 +160,7 @@ struct OnboardingView: View {
                 NotificationCenter.default.post(name: .init("PlayRobotWave"), object: nil)
             }
             DispatchQueue.main.asyncAfter(deadline: .now() + 8.0) {
-                withAnimation { showBubble = true }
-            }
-        }
-        .onReceive(Timer.publish(every: 12, on: .main, in: .common).autoconnect()) { _ in
-            withAnimation(.easeInOut(duration: 0.5)) {
-                messageIndex = (messageIndex + 1) % messages.count
+                startMessageCycle()
             }
         }
     }
@@ -194,7 +189,7 @@ struct OnboardingView: View {
             HStack(spacing: MRSpacing.sm) {
                 Image(systemName: "apple.logo")
                     .font(.system(size: 22, weight: .medium))
-                Text("Continue with Apple")
+                Text("Continue with Apple Calendar")
                     .font(.system(.body, design: .default).weight(.medium))
             }
             .frame(maxWidth: .infinity)
@@ -213,7 +208,7 @@ struct OnboardingView: View {
                     .resizable()
                     .scaledToFit()
                     .frame(width: 22, height: 22)
-                Text("Continue with Google")
+                Text("Continue with Google Calendar")
                     .font(.system(.body, design: .default).weight(.medium))
             }
             .frame(maxWidth: .infinity)
@@ -249,6 +244,22 @@ struct OnboardingView: View {
         // TODO: Implement full Google OAuth flow in a future phase
         UserDefaults.standard.set("google", forKey: "calendarProvider")
         withAnimation(.easeInOut(duration: 0.4)) { showConfirmation = true }
+    }
+
+    // MARK: - Message cycle
+
+    private func startMessageCycle() {
+        func showNext() {
+            withAnimation(.easeInOut(duration: 0.4)) { bubbleVisible = true }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 10.0) {
+                withAnimation(.easeInOut(duration: 0.4)) { bubbleVisible = false }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                    messageIndex = (messageIndex + 1) % messages.count
+                    showNext()
+                }
+            }
+        }
+        showNext()
     }
 }
 
