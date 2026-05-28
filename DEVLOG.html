@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MeetingRobot — Dev Log</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+  :root {
+    --bg:#080B10;--surface:#0E1219;--surface2:#141820;--border:#1E2530;
+    --accent:#00D4FF;--accent2:#7B61FF;--green:#00E5A0;--yellow:#FFD166;
+    --red:#FF5C5C;--text:#E8EDF5;--text2:#8892A4;--text3:#4A5568;
+    --mono:'JetBrains Mono',monospace;--sans:'Space Grotesk',sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:100vh;}
+
+  /* HEADER */
+  .header{background:linear-gradient(135deg,#0A0F1A,#0D1520,#080B10);border-bottom:1px solid var(--border);padding:16px 28px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;backdrop-filter:blur(20px);}
+  .header-left{display:flex;align-items:center;gap:10px;}
+  .robot-icon{font-size:24px;animation:float 3s ease-in-out infinite;}
+  @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+  .header h1{font-size:16px;font-weight:600;}
+  .header p{font-size:11px;color:var(--text2);font-family:var(--mono);margin-top:1px;}
+  .header-right{display:flex;gap:8px;align-items:center;}
+
+  /* LAYOUT */
+  .container{display:grid;grid-template-columns:210px 1fr;min-height:calc(100vh - 65px);}
+  .sidebar{background:var(--surface);border-right:1px solid var(--border);padding:16px 0;position:sticky;top:65px;height:calc(100vh - 65px);overflow-y:auto;}
+  .sidebar-label{font-family:var(--mono);font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:1.5px;padding:0 14px;margin-bottom:4px;margin-top:16px;}
+  .sidebar-label:first-child{margin-top:0;}
+  .nav-item{display:flex;align-items:center;gap:8px;padding:7px 14px;cursor:pointer;transition:all .15s;font-size:13px;color:var(--text2);border:none;background:none;width:100%;text-align:left;}
+  .nav-item:hover{background:var(--surface2);color:var(--text);}
+  .nav-item.active{background:rgba(0,212,255,.1);color:var(--accent);}
+  .nav-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+  .main{padding:24px 28px;overflow-y:auto;}
+  .section{display:none;}.section.active{display:block;}
+
+  /* CARDS */
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px;margin-bottom:14px;}
+  .card:hover{border-color:#2A3445;}
+  .card-title{font-size:13px;font-weight:600;display:flex;align-items:center;gap:8px;margin-bottom:14px;}
+
+  /* STATS */
+  .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px;}
+  .stat-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px;text-align:center;}
+  .stat-num{font-size:26px;font-weight:700;font-family:var(--mono);color:var(--accent);line-height:1;margin-bottom:3px;}
+  .stat-label{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;font-family:var(--mono);}
+
+  /* BADGES */
+  .badge{font-family:var(--mono);font-size:10px;font-weight:600;padding:2px 7px;border-radius:20px;text-transform:uppercase;letter-spacing:.5px;white-space:nowrap;}
+  .badge-done{background:rgba(0,229,160,.15);color:var(--green);}
+  .badge-progress{background:rgba(255,209,102,.15);color:var(--yellow);}
+  .badge-broken{background:rgba(255,92,92,.15);color:var(--red);}
+  .badge-todo{background:rgba(74,85,104,.2);color:var(--text3);}
+  .badge-p1{background:rgba(0,212,255,.15);color:var(--accent);}
+  .badge-p2{background:rgba(123,97,255,.15);color:var(--accent2);}
+  .badge-p3{background:rgba(0,229,160,.15);color:var(--green);}
+  .badge-p4{background:rgba(255,209,102,.15);color:var(--yellow);}
+  .badge-general{background:rgba(74,85,104,.2);color:var(--text2);}
+
+  /* LOG */
+  .log-entry{background:var(--surface);border:1px solid var(--border);border-radius:12px;margin-bottom:10px;overflow:hidden;}
+  .log-header{display:flex;align-items:center;justify-content:space-between;padding:13px 16px;cursor:pointer;transition:background .15s;}
+  .log-header:hover{background:var(--surface2);}
+  .log-date{font-family:var(--mono);font-size:12px;font-weight:600;color:var(--accent);}
+  .log-summary{font-size:12px;color:var(--text2);margin-top:2px;}
+  .log-body{padding:0 16px 16px;border-top:1px solid var(--border);display:none;}
+  .log-body.open{display:block;}
+  .log-section-title{font-family:var(--mono);font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin:12px 0 6px;}
+  .log-list{list-style:none;}
+  .log-list li{font-size:12px;color:var(--text2);padding:3px 0 3px 14px;position:relative;line-height:1.5;}
+  .log-list li::before{content:'→';position:absolute;left:0;color:var(--accent);font-family:var(--mono);font-size:10px;}
+
+  /* PHASE TRACKER */
+  .phase-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:20px;}
+  .phase-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px;}
+  .phase-title{font-size:11px;font-weight:600;color:var(--text2);font-family:var(--mono);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--border);}
+  .feature-row{display:flex;align-items:center;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);}
+  .feature-row:last-child{border-bottom:none;}
+  .feature-name{font-size:12px;color:var(--text2);}
+
+  /* BUGS & IDEAS */
+  .phase-section{margin-bottom:20px;}
+  .phase-section-header{display:flex;align-items:center;gap:8px;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--border);}
+  .phase-count{font-family:var(--mono);font-size:11px;color:var(--text3);background:var(--surface2);padding:2px 7px;border-radius:20px;}
+
+  .item-card{background:var(--surface2);border:1px solid var(--border);border-radius:9px;padding:11px 13px;margin-bottom:7px;transition:border-color .2s;}
+  .item-card:hover{border-color:#2A3445;}
+  .item-top{display:flex;align-items:flex-start;gap:10px;}
+  .item-num{font-family:var(--mono);font-size:11px;color:var(--text3);min-width:26px;margin-top:1px;}
+  .item-content{flex:1;}
+  .item-title{font-size:13px;color:var(--text);line-height:1.4;margin-bottom:4px;}
+  .item-title.done{text-decoration:line-through;color:var(--text3);}
+  .item-meta{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:4px;}
+  .item-date{font-family:var(--mono);font-size:10px;color:var(--text3);}
+  .item-actions{display:flex;gap:5px;align-items:center;flex-shrink:0;}
+
+  /* SCREENSHOT AREA */
+  .screenshot-area{margin-top:10px;}
+  .screenshot-thumbs{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px;}
+  .screenshot-thumb{position:relative;width:80px;height:60px;border-radius:6px;overflow:hidden;border:1px solid var(--border);cursor:pointer;transition:border-color .2s;}
+  .screenshot-thumb:hover{border-color:var(--accent);}
+  .screenshot-thumb img{width:100%;height:100%;object-fit:cover;}
+  .screenshot-thumb .delete-ss{position:absolute;top:2px;right:2px;background:rgba(0,0,0,.7);border:none;color:#fff;border-radius:4px;width:16px;height:16px;font-size:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .15s;}
+  .screenshot-thumb:hover .delete-ss{opacity:1;}
+  .drop-zone{border:1.5px dashed var(--border);border-radius:8px;padding:12px;text-align:center;cursor:pointer;transition:all .2s;font-size:11px;color:var(--text3);font-family:var(--mono);}
+  .drop-zone:hover,.drop-zone.drag-over{border-color:var(--accent);color:var(--accent);background:rgba(0,212,255,.05);}
+  .screenshot-note{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:7px 10px;color:var(--text2);font-size:11px;font-family:var(--mono);outline:none;margin-top:6px;resize:none;min-height:40px;}
+  .screenshot-note:focus{border-color:var(--accent);}
+
+  /* LIGHTBOX */
+  .lightbox{position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:1000;display:none;align-items:center;justify-content:center;}
+  .lightbox.open{display:flex;}
+  .lightbox img{max-width:90vw;max-height:90vh;border-radius:8px;object-fit:contain;}
+  .lightbox-close{position:absolute;top:20px;right:20px;background:var(--surface);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:8px 14px;cursor:pointer;font-family:var(--mono);font-size:12px;}
+
+  /* BUTTONS */
+  .btn{padding:8px 16px;border-radius:9px;font-size:12px;font-weight:600;cursor:pointer;border:none;transition:all .15s;font-family:var(--sans);}
+  .btn-primary{background:var(--accent);color:#000;}
+  .btn-primary:hover{background:#00B8E0;transform:translateY(-1px);}
+  .btn-ghost{background:var(--surface2);color:var(--text2);border:1px solid var(--border);}
+  .btn-ghost:hover{color:var(--text);}
+  .btn-sm{padding:4px 10px;font-size:11px;border-radius:6px;}
+  .btn-save{background:linear-gradient(135deg,#00D4FF,#7B61FF);color:#000;font-weight:700;}
+  .btn-save:hover{opacity:.9;transform:translateY(-1px);}
+  .check-btn{width:18px;height:18px;border-radius:4px;border:1.5px solid var(--border);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;background:none;font-size:10px;color:transparent;flex-shrink:0;}
+  .check-btn.checked{background:var(--green);border-color:var(--green);color:#000;}
+  .delete-btn{background:none;border:none;color:var(--text3);cursor:pointer;font-size:13px;padding:0 2px;transition:color .15s;}
+  .delete-btn:hover{color:var(--red);}
+
+  /* FORM */
+  .form-group{margin-bottom:12px;}
+  .form-label{font-family:var(--mono);font-size:10px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:6px;}
+  .form-input,.form-textarea,.form-select{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:9px;padding:8px 12px;color:var(--text);font-family:var(--sans);font-size:13px;outline:none;transition:border-color .2s;resize:vertical;}
+  .form-input:focus,.form-textarea:focus,.form-select:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(0,212,255,.1);}
+  .form-textarea{min-height:70px;}
+  .form-select option{background:var(--surface2);}
+  .form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+
+  /* SAVE BANNER */
+  .save-banner{background:linear-gradient(135deg,rgba(0,212,255,.1),rgba(123,97,255,.1));border:1px solid rgba(0,212,255,.3);border-radius:12px;padding:14px 18px;margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;}
+  .save-banner-text{font-size:13px;color:var(--text2);}
+  .save-banner-text strong{color:var(--accent);display:block;font-size:14px;margin-bottom:2px;}
+
+  /* TOAST */
+  .toast{position:fixed;bottom:18px;right:18px;background:var(--surface);border:1px solid var(--accent);border-radius:9px;padding:9px 14px;font-size:12px;color:var(--accent);font-family:var(--mono);z-index:999;transform:translateY(50px);opacity:0;transition:all .3s cubic-bezier(.34,1.56,.64,1);}
+  .toast.show{transform:translateY(0);opacity:1;}
+  hr.divider{border:none;border-top:1px solid var(--border);margin:14px 0;}
+  .empty{text-align:center;padding:28px;color:var(--text3);font-size:12px;font-family:var(--mono);}
+  ::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-track{background:transparent;}::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <span class="robot-icon">🤖</span>
+    <div>
+      <h1>MeetingRobot — Dev Log</h1>
+      <p>github.com/PravallikaN1997/Meeting-robot</p>
+    </div>
+  </div>
+  <div class="header-right">
+    <button class="btn btn-ghost btn-sm" onclick="exportJSON()">Export JSON</button>
+    <button class="btn btn-save btn-sm" onclick="saveToFile()">💾 Save to File</button>
+    <button class="btn btn-primary btn-sm" onclick="showSection('new-entry');setActive('nav-new')">+ New Entry</button>
+  </div>
+</div>
+
+<div class="container">
+  <div class="sidebar">
+    <div class="sidebar-label">Overview</div>
+    <button class="nav-item active" id="nav-overview" onclick="showSection('overview');setActive('nav-overview')"><span class="nav-dot" style="background:var(--accent)"></span>Dashboard</button>
+    <div class="sidebar-label">Tracking</div>
+    <button class="nav-item" id="nav-log" onclick="showSection('log');setActive('nav-log')"><span class="nav-dot" style="background:var(--accent2)"></span>Session Log</button>
+    <button class="nav-item" id="nav-phases" onclick="showSection('phases');setActive('nav-phases')"><span class="nav-dot" style="background:var(--green)"></span>Phase Tracker</button>
+    <button class="nav-item" id="nav-bugs" onclick="showSection('bugs');setActive('nav-bugs')"><span class="nav-dot" style="background:var(--red)"></span>Bug Tracker</button>
+    <button class="nav-item" id="nav-ideas" onclick="showSection('ideas');setActive('nav-ideas')"><span class="nav-dot" style="background:var(--yellow)"></span>Ideas Backlog</button>
+    <div class="sidebar-label">Add</div>
+    <button class="nav-item" id="nav-new" onclick="showSection('new-entry');setActive('nav-new')"><span class="nav-dot" style="background:var(--text3)"></span>New Session</button>
+    <button class="nav-item" id="nav-newbug" onclick="showSection('new-bug');setActive('nav-newbug')"><span class="nav-dot" style="background:var(--red)"></span>Log a Bug</button>
+    <button class="nav-item" id="nav-newidea" onclick="showSection('new-idea');setActive('nav-newidea')"><span class="nav-dot" style="background:var(--yellow)"></span>Add an Idea</button>
+  </div>
+
+  <div class="main">
+
+    <!-- OVERVIEW -->
+    <div class="section active" id="section-overview">
+      <div class="save-banner">
+        <div class="save-banner-text">
+          <strong>💾 How to save permanently</strong>
+          Click "Save to File" → download the HTML → replace the file in your repo → git commit & push. Your data is baked into the file itself.
+        </div>
+        <button class="btn btn-save" onclick="saveToFile()">Save to File</button>
+      </div>
+      <div class="stats-row">
+        <div class="stat-card"><div class="stat-num" id="s-sessions">0</div><div class="stat-label">Sessions</div></div>
+        <div class="stat-card"><div class="stat-num" id="s-done">0</div><div class="stat-label">Fixed Bugs</div></div>
+        <div class="stat-card"><div class="stat-num" id="s-bugs">0</div><div class="stat-label">Open Bugs</div></div>
+        <div class="stat-card"><div class="stat-num" id="s-ideas">0</div><div class="stat-label">Ideas</div></div>
+      </div>
+      <div class="card"><div class="card-title">🗓️ Latest Session</div><div id="latest-session"><div class="empty">No sessions yet.</div></div></div>
+      <div class="card"><div class="card-title">🚧 Open Bugs by Phase</div><div id="overview-bugs"></div></div>
+    </div>
+
+    <!-- SESSION LOG -->
+    <div class="section" id="section-log">
+      <div id="log-list"><div class="empty">No sessions yet.</div></div>
+    </div>
+
+    <!-- PHASE TRACKER -->
+    <div class="section" id="section-phases">
+      <div class="phase-grid">
+        <div class="phase-card">
+          <div class="phase-title">⚡ Phase 1 — Onboarding</div>
+          <div class="feature-row"><span class="feature-name">Onboarding screen</span><span class="badge badge-done">Done</span></div>
+          <div class="feature-row"><span class="feature-name">Fluid gradient bg</span><span class="badge badge-broken">Broken</span></div>
+          <div class="feature-row"><span class="feature-name">Robot walk-in animation</span><span class="badge badge-progress">In Progress</span></div>
+          <div class="feature-row"><span class="feature-name">Speech bubble messages</span><span class="badge badge-done">Done</span></div>
+          <div class="feature-row"><span class="feature-name">Dark/light mode toggle</span><span class="badge badge-todo">Todo</span></div>
+          <div class="feature-row"><span class="feature-name">Sound effects</span><span class="badge badge-todo">Todo</span></div>
+          <div class="feature-row"><span class="feature-name">Apple Calendar connect</span><span class="badge badge-todo">Todo</span></div>
+          <div class="feature-row"><span class="feature-name">Google Calendar connect</span><span class="badge badge-todo">Todo</span></div>
+        </div>
+        <div class="phase-card">
+          <div class="phase-title">🔧 Phase 2 — Menu Bar</div>
+          <div class="feature-row"><span class="feature-name">NSStatusItem icon</span><span class="badge badge-todo">Todo</span></div>
+          <div class="feature-row"><span class="feature-name">Menu dropdown</span><span class="badge badge-todo">Todo</span></div>
+          <div class="feature-row"><span class="feature-name">Next meeting info</span><span class="badge badge-todo">Todo</span></div>
+          <div class="feature-row"><span class="feature-name">Snooze option</span><span class="badge badge-todo">Todo</span></div>
+          <div class="feature-row"><span class="feature-name">Preferences window</span><span class="badge badge-todo">Todo</span></div>
+        </div>
+        <div class="phase-card">
+          <div class="phase-title">🤖 Phase 3 — Overlay</div>
+          <div class="feature-row"><span class="feature-name">Transparent NSWindow</span><span class="badge badge-todo">Todo</span></div>
+          <div class="feature-row"><span class="feature-name">Robot walks screen</span><span class="badge badge-todo">Todo</span></div>
+          <div class="feature-row"><span class="feature-name">Speech bubble</span><span class="badge badge-todo">Todo</span></div>
+          <div class="feature-row"><span class="feature-name">Click interactions</span><span class="badge badge-todo">Todo</span></div>
+          <div class="feature-row"><span class="feature-name">Walk back if ignored</span><span class="badge badge-todo">Todo</span></div>
+          <div class="feature-row"><span class="feature-name">Double-click dismiss</span><span class="badge badge-todo">Todo</span></div>
+        </div>
+        <div class="phase-card">
+          <div class="phase-title">📅 Phase 4 — Calendar</div>
+          <div class="feature-row"><span class="feature-name">60s background poll</span><span class="badge badge-todo">Todo</span></div>
+          <div class="feature-row"><span class="feature-name">T-5 min trigger</span><span class="badge badge-todo">Todo</span></div>
+          <div class="feature-row"><span class="feature-name">Skip all-day events</span><span class="badge badge-todo">Todo</span></div>
+          <div class="feature-row"><span class="feature-name">Skip declined events</span><span class="badge badge-todo">Todo</span></div>
+          <div class="feature-row"><span class="feature-name">Skip solo events</span><span class="badge badge-todo">Todo</span></div>
+          <div class="feature-row"><span class="feature-name">No duplicate triggers</span><span class="badge badge-todo">Todo</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BUG TRACKER -->
+    <div class="section" id="section-bugs">
+      <div id="bugs-by-phase"></div>
+    </div>
+
+    <!-- IDEAS -->
+    <div class="section" id="section-ideas">
+      <div id="ideas-by-phase"></div>
+    </div>
+
+    <!-- NEW SESSION -->
+    <div class="section" id="section-new-entry">
+      <div class="card">
+        <div class="card-title">📝 New Session Entry</div>
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">Date</label><input class="form-input" id="e-date" type="date"></div>
+          <div class="form-group"><label class="form-label">Session #</label><input class="form-input" id="e-num" type="number" min="1" placeholder="Auto"></div>
+        </div>
+        <div class="form-group"><label class="form-label">Summary</label><input class="form-input" id="e-summary" placeholder="e.g. Fixed gradient · Added menu bar · 4 commits"></div>
+        <div class="form-group"><label class="form-label">✅ What worked</label><textarea class="form-textarea" id="e-worked" placeholder="One item per line"></textarea></div>
+        <div class="form-group"><label class="form-label">🐛 What broke</label><textarea class="form-textarea" id="e-broke" placeholder="One item per line"></textarea></div>
+        <div class="form-group"><label class="form-label">💡 Notes</label><textarea class="form-textarea" id="e-notes" placeholder="One item per line"></textarea></div>
+        <div style="display:flex;gap:8px"><button class="btn btn-primary" onclick="saveEntry()">Save Entry</button><button class="btn btn-ghost" onclick="showSection('log');setActive('nav-log')">Cancel</button></div>
+      </div>
+    </div>
+
+    <!-- NEW BUG -->
+    <div class="section" id="section-new-bug">
+      <div class="card">
+        <div class="card-title">🐛 Log a Bug</div>
+        <div class="form-group"><label class="form-label">Bug Description</label><input class="form-input" id="b-desc" placeholder="What's broken?"></div>
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">Phase</label>
+            <select class="form-select" id="b-phase">
+              <option value="phase1">Phase 1 — Onboarding</option>
+              <option value="phase2">Phase 2 — Menu Bar</option>
+              <option value="phase3">Phase 3 — Overlay</option>
+              <option value="phase4">Phase 4 — Calendar</option>
+              <option value="general">General</option>
+            </select>
+          </div>
+          <div class="form-group"><label class="form-label">Status</label>
+            <select class="form-select" id="b-status">
+              <option value="open">Open</option>
+              <option value="progress">In Progress</option>
+              <option value="fixed">Fixed</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group"><label class="form-label">File / Commit</label><input class="form-input" id="b-commit" placeholder="e.g. OnboardingView.swift"></div>
+        <div class="form-group"><label class="form-label">Discovered in Session</label><input class="form-input" id="b-session" placeholder="e.g. Session 1 · May 28"></div>
+        <div class="form-group">
+          <label class="form-label">📸 Screenshots</label>
+          <div class="drop-zone" id="bug-drop" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="dropFiles(event,'bug-screenshots')" onclick="document.getElementById('bug-file-input').click()">
+            Drop screenshots here or click to upload
+          </div>
+          <input type="file" id="bug-file-input" accept="image/*" multiple style="display:none" onchange="handleFiles(event,'bug-screenshots')">
+          <div class="screenshot-thumbs" id="bug-screenshots"></div>
+          <textarea class="screenshot-note" id="b-ss-note" placeholder="Note about the screenshot (optional)..."></textarea>
+        </div>
+        <div style="display:flex;gap:8px"><button class="btn btn-primary" onclick="saveBug()">Log Bug</button><button class="btn btn-ghost" onclick="showSection('bugs');setActive('nav-bugs')">Cancel</button></div>
+      </div>
+    </div>
+
+    <!-- NEW IDEA -->
+    <div class="section" id="section-new-idea">
+      <div class="card">
+        <div class="card-title">💡 Add an Idea</div>
+        <div class="form-group"><label class="form-label">Idea</label><input class="form-input" id="i-text" placeholder="What's the idea?"></div>
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">Related Phase</label>
+            <select class="form-select" id="i-phase">
+              <option value="phase1">Phase 1 — Onboarding</option>
+              <option value="phase2">Phase 2 — Menu Bar</option>
+              <option value="phase3">Phase 3 — Overlay</option>
+              <option value="phase4">Phase 4 — Calendar</option>
+              <option value="general">General / Future</option>
+            </select>
+          </div>
+          <div class="form-group"><label class="form-label">Priority</label>
+            <select class="form-select" id="i-priority">
+              <option value="high">🔴 High</option>
+              <option value="medium" selected>🟡 Medium</option>
+              <option value="low">🟢 Low</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group"><label class="form-label">Context</label><input class="form-input" id="i-context" placeholder="e.g. came up during Session 1 while testing onboarding"></div>
+        <div style="display:flex;gap:8px"><button class="btn btn-primary" onclick="saveIdea()">Add Idea</button><button class="btn btn-ghost" onclick="showSection('ideas');setActive('nav-ideas')">Cancel</button></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <button class="lightbox-close" onclick="closeLightbox()">✕ Close</button>
+  <img id="lightbox-img" src="" alt="">
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ─── EMBEDDED STATE (gets baked in on Save to File) ───
+const EMBEDDED_STATE = null; // DO NOT EDIT THIS LINE MANUALLY
+
+const PHASES = {
+  phase1:{label:'Phase 1 — Onboarding',badge:'badge-p1',emoji:'⚡'},
+  phase2:{label:'Phase 2 — Menu Bar',badge:'badge-p2',emoji:'🔧'},
+  phase3:{label:'Phase 3 — Overlay',badge:'badge-p3',emoji:'🤖'},
+  phase4:{label:'Phase 4 — Calendar',badge:'badge-p4',emoji:'📅'},
+  general:{label:'General / Future',badge:'badge-general',emoji:'💭'}
+};
+
+const SEED = {
+  sessions:[{
+    id:1,date:'2026-05-28',num:1,
+    summary:'Project setup · Onboarding screen · Robot animation · 6 commits',
+    worked:['Git repo setup and push to GitHub','Claude Code connected to local repo','DesignSystem.swift tokens created','Onboarding screen running in Xcode','Robot Lottie animation rendering with scaleEffect fix','Speech bubble messages cycling','Apple + Google buttons with correct icons'],
+    broke:['Fluid gradient not animating','Robot waves before settling','Button font too small'],
+    notes:['Robot Lottie 1920x1080 canvas — scaleEffect workaround needed','Speech bubble shows after 6s delay','Google icon: SVG asset more reliable than Canvas-drawn G']
+  },{
+    id:2,date:'2026-05-28',num:2,
+    summary:'Onboarding UI redesign · Dark/light mode · Robot sizing · Spacing tuning · 8 commits',
+    worked:[
+      'Replaced old robot asset with new Lottie JSON (robot.json — Dancing 1 animation, 346×346 canvas)',
+      'Fixed robot rendering — key formula: scaleEffect = targetSize / 346',
+      'Final robot size: 140px using scaleEffect(0.405)',
+      'Added dark/light mode toggle — pill-shaped, top-right, persisted via @AppStorage',
+      'Wrapped onboarding in card: white (#FFFFFF) in light, dark (#1A1A1E) in dark mode',
+      'Replaced FluidGradientBackground with looping video (robot-bg.mp4) via AVQueuePlayer',
+      'Renamed Meeting Robot → Meetbot throughout',
+      'Updated buttons: Continue with Apple Calendar / Continue with Google Calendar',
+      'Added tagline and reason text below app name',
+      'Added Not Interested text link below buttons',
+      'Message bubble cycle: fade in → 10s → fade out → 2s gap → next message (12s total)',
+      'Dark mode: pink glow with sparkle dots around robot (replaced blue)',
+      'Dark mode colors softened: card #1A1A1E, Apple button #F0F0F5, reduced contrast throughout',
+      'Spacing fully tuned: bubble→robot 0pt, robot bottom padding -20, robot→title 8pt, title→tagline 4pt, tagline→reason 4pt, reason→buttons 32pt'
+    ],
+    broke:[
+      'scaleEffect(0.15) hack from session 1 caused robot to render ~18px — removed',
+      'Negative spacers fighting each other — resolved with padding(.bottom) approach',
+      'offset(y:) moves visually but keeps layout space — switched to padding(.bottom, -20)',
+      'Pink glow not applying initially — Claude Code was saying "already correct" without editing'
+    ],
+    notes:[
+      'Lottie scaleEffect formula: targetSize / 346 (native canvas size of this animation)',
+      'padding(.bottom, negative) collapses layout space; offset() does not',
+      'Video background: AVQueuePlayer + AVPlayerLooper for seamless loop on macOS',
+      'robot-bg.mp4 registered in project.pbxproj Resources build phase',
+      'Dark mode toggle: @AppStorage("isDarkMode") + .preferredColorScheme modifier on root ZStack',
+      'DEVLOG.md created and pushed to GitHub for the first time this session'
+    ]
+  }],
+  bugs:[
+    {id:1,desc:'Xcode project file references missing for new Swift files',phase:'phase1',status:'fixed',commit:'fix xcode project file references',session:'Session 1 · May 28',screenshots:[],ssNote:''},
+    {id:2,desc:'Missing Combine import in OnboardingView.swift',phase:'phase1',status:'fixed',commit:'fix missing Combine import',session:'Session 1 · May 28',screenshots:[],ssNote:''},
+    {id:3,desc:'Robot Lottie too large — native canvas not scaling down',phase:'phase1',status:'fixed',commit:'scaleEffect formula fix — targetSize/346',session:'Session 2 · May 28',screenshots:[],ssNote:''},
+    {id:4,desc:'Fluid gradient not animating — replaced with video background',phase:'phase1',status:'fixed',commit:'FluidGradientBackground replaced with LoopingVideoView',session:'Session 2 · May 28',screenshots:[],ssNote:''},
+    {id:5,desc:'Robot waves before reaching center — timing fixed',phase:'phase1',status:'fixed',commit:'OnboardingView animation timing tuned',session:'Session 2 · May 28',screenshots:[],ssNote:''},
+    {id:6,desc:'Button font too small — accessibility issue',phase:'phase1',status:'open',commit:'Theme.swift button style',session:'Session 1 · May 28',screenshots:[],ssNote:''},
+    {id:7,desc:'No sound effects on robot arrival or message pop',phase:'phase1',status:'open',commit:'needs AVFoundation',session:'Session 1 · May 28',screenshots:[],ssNote:''},
+    {id:8,desc:'Pink glow not applying in dark mode — Claude Code not writing changes',phase:'phase1',status:'fixed',commit:'RobotAnimationView.swift pink glow ZStack',session:'Session 2 · May 28',screenshots:[],ssNote:''},
+    {id:9,desc:'Dark mode pure black/white too harsh — contrast reduced',phase:'phase1',status:'fixed',commit:'OnboardingView dark mode color softening',session:'Session 2 · May 28',screenshots:[],ssNote:''}
+  ],
+  ideas:[
+    {id:1,text:'Sound effect when robot appears',phase:'phase3',priority:'high',context:'Session 1',done:false},
+    {id:2,text:'Sound when speech bubble pops in',phase:'phase1',priority:'medium',context:'Session 1',done:false},
+    {id:3,text:'Robot says different things per meeting type',phase:'phase3',priority:'medium',context:'Session 1',done:false},
+    {id:4,text:'Customise robot skin/color in preferences',phase:'phase2',priority:'low',context:'Session 1',done:false},
+    {id:5,text:'Snooze all reminders for today',phase:'phase2',priority:'high',context:'Session 1',done:false},
+    {id:6,text:'Stats screen: meetings reminded this week',phase:'general',priority:'low',context:'Session 1',done:false},
+    {id:7,text:'Multiple robot characters to choose from',phase:'general',priority:'low',context:'Session 1',done:false},
+    {id:8,text:'Accessibility: VoiceOver + dynamic type',phase:'phase1',priority:'high',context:'Session 1',done:false},
+    {id:9,text:'Try MeshGradient (iOS 18) for animated background instead of video',phase:'phase1',priority:'low',context:'Session 2',done:false},
+    {id:10,text:'Add haptic/audio feedback on button press',phase:'phase1',priority:'medium',context:'Session 2',done:false}
+  ]
+};
+
+// Temp screenshots buffer for new bug form
+let tempScreenshots = [];
+
+let state = {};
+
+function loadState() {
+  try {
+    if (EMBEDDED_STATE) { state = EMBEDDED_STATE; }
+    else {
+      const saved = localStorage.getItem('mr-devlog-v3');
+      state = saved ? JSON.parse(saved) : JSON.parse(JSON.stringify(SEED));
+    }
+  } catch(e) { state = JSON.parse(JSON.stringify(SEED)); }
+  // Ensure screenshots field exists on all bugs
+  state.bugs.forEach(b => { if (!b.screenshots) b.screenshots = []; if (!b.ssNote) b.ssNote = ''; });
+  persist(); render();
+}
+
+function persist() {
+  try { localStorage.setItem('mr-devlog-v3', JSON.stringify(state)); } catch(e) { showToast('⚠️ Storage full! Use Save to File'); }
+}
+
+function render() {
+  renderStats(); renderOverview(); renderLog(); renderBugs(); renderIdeas();
+  document.getElementById('e-date').value = new Date().toISOString().split('T')[0];
+}
+
+function renderStats() {
+  document.getElementById('s-sessions').textContent = state.sessions.length;
+  document.getElementById('s-done').textContent = state.bugs.filter(b=>b.status==='fixed').length;
+  document.getElementById('s-bugs').textContent = state.bugs.filter(b=>b.status==='open').length;
+  document.getElementById('s-ideas').textContent = state.ideas.length;
+}
+
+function renderOverview() {
+  const latest = state.sessions[state.sessions.length-1];
+  const el = document.getElementById('latest-session');
+  if (!latest) { el.innerHTML = '<div class="empty">No sessions yet.</div>'; }
+  else {
+    el.innerHTML = `
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+        <span style="font-family:var(--mono);font-size:11px;color:var(--accent)">${formatDate(latest.date)} — Session ${latest.num}</span>
+        <span style="font-size:12px;color:var(--text2)">${latest.summary}</span>
+      </div>
+      <ul class="log-list">${latest.worked.slice(0,4).map(w=>`<li>${w}</li>`).join('')}</ul>`;
+  }
+  const openBugs = state.bugs.filter(b=>b.status==='open');
+  const byPhase = {};
+  openBugs.forEach(b=>{ if(!byPhase[b.phase]) byPhase[b.phase]=[]; byPhase[b.phase].push(b); });
+  const ob = document.getElementById('overview-bugs');
+  if (!openBugs.length) { ob.innerHTML = '<div class="empty">No open bugs! 🎉</div>'; return; }
+  ob.innerHTML = Object.entries(byPhase).map(([p,bugs])=>`
+    <div style="margin-bottom:10px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:5px">
+        <span class="badge ${PHASES[p].badge}">${PHASES[p].emoji} ${PHASES[p].label}</span>
+        <span style="font-family:var(--mono);font-size:10px;color:var(--text3)">${bugs.length} open</span>
+      </div>
+      ${bugs.map(b=>`<div style="font-size:12px;color:var(--text2);padding:2px 0 2px 10px;border-left:2px solid var(--border)">→ ${b.desc}</div>`).join('')}
+    </div>`).join('');
+}
+
+function renderLog() {
+  const el = document.getElementById('log-list');
+  if (!state.sessions.length) { el.innerHTML = '<div class="empty">No sessions yet.</div>'; return; }
+  el.innerHTML = [...state.sessions].reverse().map(s=>`
+    <div class="log-entry">
+      <div class="log-header" onclick="this.nextElementSibling.classList.toggle('open');this.querySelector('.chev').textContent=this.nextElementSibling.classList.contains('open')?'▲':'▼'">
+        <div>
+          <div class="log-date">${formatDate(s.date)} — Session ${s.num}</div>
+          <div class="log-summary">${s.summary}</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <button class="btn btn-ghost btn-sm" onclick="event.stopPropagation();deleteSession(${s.id})">Delete</button>
+          <span class="chev" style="color:var(--text3);font-size:11px">▼</span>
+        </div>
+      </div>
+      <div class="log-body">
+        ${s.worked.length?`<div class="log-section-title">✅ What worked</div><ul class="log-list">${s.worked.map(w=>`<li>${w}</li>`).join('')}</ul>`:''}
+        ${s.broke.length?`<div class="log-section-title">🐛 What broke</div><ul class="log-list">${s.broke.map(w=>`<li>${w}</li>`).join('')}</ul>`:''}
+        ${s.notes.length?`<div class="log-section-title">💡 Notes</div><ul class="log-list">${s.notes.map(w=>`<li>${w}</li>`).join('')}</ul>`:''}
+      </div>
+    </div>`).join('');
+}
+
+function renderBugs() {
+  const el = document.getElementById('bugs-by-phase');
+  const order = ['phase1','phase2','phase3','phase4','general'];
+  el.innerHTML = order.map(phase=>{
+    const bugs = state.bugs.filter(b=>b.phase===phase);
+    if (!bugs.length) return '';
+    return `
+      <div class="phase-section">
+        <div class="phase-section-header">
+          <span class="badge ${PHASES[phase].badge}">${PHASES[phase].emoji} ${PHASES[phase].label}</span>
+          <span class="phase-count">${bugs.filter(b=>b.status==='open').length} open · ${bugs.filter(b=>b.status==='fixed').length} fixed</span>
+          <button class="btn btn-ghost btn-sm" onclick="showSection('new-bug');setActive('nav-newbug');document.getElementById('b-phase').value='${phase}'">+ Bug</button>
+        </div>
+        ${bugs.map(b=>`
+          <div class="item-card" id="bug-${b.id}">
+            <div class="item-top">
+              <div class="item-num">#${b.id}</div>
+              <div class="item-content">
+                <div class="item-title">${b.desc}</div>
+                <div class="item-meta">
+                  <span class="badge ${b.status==='fixed'?'badge-done':b.status==='progress'?'badge-progress':'badge-broken'}">${b.status==='fixed'?'Fixed':b.status==='progress'?'In Progress':'Open'}</span>
+                  ${b.session?`<span class="item-date">📅 ${b.session}</span>`:''}
+                  ${b.commit?`<span class="item-date">📄 ${b.commit}</span>`:''}
+                </div>
+                ${b.ssNote?`<div style="font-size:11px;color:var(--text3);margin-top:5px;font-family:var(--mono)">📝 ${b.ssNote}</div>`:''}
+              </div>
+              <div class="item-actions">
+                ${b.status!=='fixed'?`<button class="btn btn-ghost btn-sm" onclick="markBugFixed(${b.id})">✓ Fix</button>`:''}
+                <button class="btn btn-ghost btn-sm" onclick="toggleScreenshotArea(${b.id})">📸 ${b.screenshots.length?b.screenshots.length+' photo':'Add'}</button>
+                <button class="delete-btn" onclick="deleteBug(${b.id})">×</button>
+              </div>
+            </div>
+            <div class="screenshot-area" id="ss-area-${b.id}" style="display:none">
+              ${b.screenshots.length?`<div class="screenshot-thumbs">${b.screenshots.map((s,i)=>`
+                <div class="screenshot-thumb" onclick="openLightbox('${s}')">
+                  <img src="${s}" alt="screenshot">
+                  <button class="delete-ss" onclick="event.stopPropagation();deleteScreenshot(${b.id},${i})">×</button>
+                </div>`).join('')}</div>`:''}
+              <div class="drop-zone" ondragover="dragOver(event)" ondragleave="dragLeave(event)" ondrop="dropFilesExisting(event,${b.id})" onclick="document.getElementById('ss-input-${b.id}').click()">
+                📎 Drop screenshot here or click to upload
+              </div>
+              <input type="file" id="ss-input-${b.id}" accept="image/*" multiple style="display:none" onchange="handleFilesExisting(event,${b.id})">
+            </div>
+          </div>`).join('')}
+      </div>`;
+  }).join('');
+}
+
+function renderIdeas() {
+  const el = document.getElementById('ideas-by-phase');
+  const order = ['phase1','phase2','phase3','phase4','general'];
+  const prioEmoji = {high:'🔴',medium:'🟡',low:'🟢'};
+  el.innerHTML = order.map(phase=>{
+    const ideas = state.ideas.filter(i=>i.phase===phase);
+    if (!ideas.length) return '';
+    return `
+      <div class="phase-section">
+        <div class="phase-section-header">
+          <span class="badge ${PHASES[phase].badge}">${PHASES[phase].emoji} ${PHASES[phase].label}</span>
+          <span class="phase-count">${ideas.filter(i=>!i.done).length} open · ${ideas.filter(i=>i.done).length} done</span>
+          <button class="btn btn-ghost btn-sm" onclick="showSection('new-idea');setActive('nav-newidea');document.getElementById('i-phase').value='${phase}'">+ Idea</button>
+        </div>
+        ${ideas.map(i=>`
+          <div class="item-card">
+            <div class="item-top">
+              <button class="check-btn ${i.done?'checked':''}" onclick="toggleIdea(${i.id})">${i.done?'✓':''}</button>
+              <div class="item-content">
+                <div class="item-title ${i.done?'done':''}">${i.text}</div>
+                <div class="item-meta">
+                  <span style="font-size:11px">${prioEmoji[i.priority]||'🟡'} ${i.priority}</span>
+                  ${i.context?`<span class="item-date">💬 ${i.context}</span>`:''}
+                </div>
+              </div>
+              <button class="delete-btn" onclick="deleteIdea(${i.id})">×</button>
+            </div>
+          </div>`).join('')}
+      </div>`;
+  }).join('');
+}
+
+// ─── ACTIONS ───
+function saveEntry() {
+  const date = document.getElementById('e-date').value;
+  const summary = document.getElementById('e-summary').value.trim();
+  if (!date||!summary) { showToast('Date and summary required!'); return; }
+  const num = parseInt(document.getElementById('e-num').value)||state.sessions.length+1;
+  const toArr = id => document.getElementById(id).value.split('\n').filter(l=>l.trim()).map(l=>l.trim());
+  state.sessions.push({id:Date.now(),date,num,summary,worked:toArr('e-worked'),broke:toArr('e-broke'),notes:toArr('e-notes')});
+  persist(); render();
+  ['e-summary','e-worked','e-broke','e-notes'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('e-num').value='';
+  showToast('Session saved! ✓');
+  showSection('log'); setActive('nav-log');
+}
+
+function saveBug() {
+  const desc = document.getElementById('b-desc').value.trim();
+  if (!desc) { showToast('Description required!'); return; }
+  state.bugs.push({
+    id: state.bugs.length+1, desc,
+    phase: document.getElementById('b-phase').value,
+    status: document.getElementById('b-status').value,
+    commit: document.getElementById('b-commit').value.trim(),
+    session: document.getElementById('b-session').value.trim(),
+    screenshots: [...tempScreenshots],
+    ssNote: document.getElementById('b-ss-note').value.trim()
+  });
+  tempScreenshots = [];
+  document.getElementById('bug-screenshots').innerHTML = '';
+  persist(); render();
+  ['b-desc','b-commit','b-session','b-ss-note'].forEach(id=>document.getElementById(id).value='');
+  showToast('Bug logged! 🐛');
+  showSection('bugs'); setActive('nav-bugs');
+}
+
+function saveIdea() {
+  const text = document.getElementById('i-text').value.trim();
+  if (!text) { showToast('Idea required!'); return; }
+  state.ideas.push({
+    id: state.ideas.length+1, text,
+    phase: document.getElementById('i-phase').value,
+    priority: document.getElementById('i-priority').value,
+    context: document.getElementById('i-context').value.trim(),
+    done: false
+  });
+  persist(); render();
+  ['i-text','i-context'].forEach(id=>document.getElementById(id).value='');
+  showToast('Idea added! 💡');
+  showSection('ideas'); setActive('nav-ideas');
+}
+
+function markBugFixed(id) { const b=state.bugs.find(b=>b.id===id); if(b){b.status='fixed';persist();render();showToast('Bug fixed! ✓');} }
+function deleteBug(id) { if(confirm('Delete this bug?')){state.bugs=state.bugs.filter(b=>b.id!==id);persist();render();showToast('Deleted');} }
+function deleteIdea(id) { if(confirm('Delete?')){state.ideas=state.ideas.filter(i=>i.id!==id);persist();render();showToast('Deleted');} }
+function deleteSession(id) { if(confirm('Delete session?')){state.sessions=state.sessions.filter(s=>s.id!==id);persist();render();showToast('Deleted');} }
+function toggleIdea(id) { const i=state.ideas.find(i=>i.id===id); if(i){i.done=!i.done;persist();render();showToast(i.done?'Done! ✓':'Reopened');} }
+
+// ─── SCREENSHOTS ───
+function toggleScreenshotArea(bugId) {
+  const area = document.getElementById(`ss-area-${bugId}`);
+  area.style.display = area.style.display==='none' ? 'block' : 'none';
+}
+
+function compressImage(file, maxKB=200) {
+  return new Promise(resolve=>{
+    const reader = new FileReader();
+    reader.onload = e=>{
+      const img = new Image();
+      img.onload = ()=>{
+        const canvas = document.createElement('canvas');
+        let w=img.width, h=img.height;
+        const maxDim = 800;
+        if (w>maxDim||h>maxDim) { if(w>h){h=Math.round(h*maxDim/w);w=maxDim;}else{w=Math.round(w*maxDim/h);h=maxDim;} }
+        canvas.width=w; canvas.height=h;
+        canvas.getContext('2d').drawImage(img,0,0,w,h);
+        resolve(canvas.toDataURL('image/jpeg',0.7));
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+async function handleFiles(e, containerId) {
+  const files = Array.from(e.target.files);
+  for (const file of files) {
+    const data = await compressImage(file);
+    tempScreenshots.push(data);
+    addThumbToContainer(containerId, data, tempScreenshots.length-1, true);
+  }
+}
+
+async function handleFilesExisting(e, bugId) {
+  const bug = state.bugs.find(b=>b.id===bugId);
+  if (!bug) return;
+  const files = Array.from(e.target.files);
+  for (const file of files) {
+    const data = await compressImage(file);
+    bug.screenshots.push(data);
+  }
+  persist(); render();
+  document.getElementById(`ss-area-${bugId}`).style.display='block';
+  showToast('Screenshot added! 📸');
+}
+
+function addThumbToContainer(containerId, src, idx, isTemp) {
+  const container = document.getElementById(containerId);
+  const div = document.createElement('div');
+  div.className = 'screenshot-thumb';
+  div.innerHTML = `<img src="${src}" onclick="openLightbox('${src}')"><button class="delete-ss" onclick="${isTemp?`removeTempSS(${idx})`:`deleteScreenshot(null,${idx})`}">×</button>`;
+  container.appendChild(div);
+}
+
+function removeTempSS(idx) { tempScreenshots.splice(idx,1); document.getElementById('bug-screenshots').innerHTML=''; tempScreenshots.forEach((s,i)=>addThumbToContainer('bug-screenshots',s,i,true)); }
+function deleteScreenshot(bugId, idx) { const b=state.bugs.find(b=>b.id===bugId); if(b){b.screenshots.splice(idx,1);persist();render();showToast('Removed');} }
+
+function dragOver(e) { e.preventDefault(); e.currentTarget.classList.add('drag-over'); }
+function dragLeave(e) { e.currentTarget.classList.remove('drag-over'); }
+async function dropFiles(e, containerId) {
+  e.preventDefault(); e.currentTarget.classList.remove('drag-over');
+  const files = Array.from(e.dataTransfer.files).filter(f=>f.type.startsWith('image/'));
+  for (const file of files) { const data=await compressImage(file); tempScreenshots.push(data); addThumbToContainer(containerId,data,tempScreenshots.length-1,true); }
+}
+async function dropFilesExisting(e, bugId) {
+  e.preventDefault(); e.currentTarget.classList.remove('drag-over');
+  const bug = state.bugs.find(b=>b.id===bugId); if(!bug) return;
+  const files = Array.from(e.dataTransfer.files).filter(f=>f.type.startsWith('image/'));
+  for (const file of files) { const data=await compressImage(file); bug.screenshots.push(data); }
+  persist(); render();
+  document.getElementById(`ss-area-${bugId}`).style.display='block';
+  showToast('Screenshot added! 📸');
+}
+
+// ─── LIGHTBOX ───
+function openLightbox(src) { document.getElementById('lightbox-img').src=src; document.getElementById('lightbox').classList.add('open'); }
+function closeLightbox() { document.getElementById('lightbox').classList.remove('open'); }
+
+// ─── SAVE TO FILE ───
+function saveToFile() {
+  const html = document.documentElement.outerHTML;
+  const stateJson = JSON.stringify(state);
+  const updated = html.replace(
+    'const EMBEDDED_STATE = null; // DO NOT EDIT THIS LINE MANUALLY',
+    `const EMBEDDED_STATE = ${stateJson}; // DO NOT EDIT THIS LINE MANUALLY`
+  );
+  const blob = new Blob([updated], {type:'text/html'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'meetingrobot-devlog.html';
+  a.click();
+  showToast('💾 Saved! Replace the file in your repo and git push');
+}
+
+function exportJSON() {
+  const blob = new Blob([JSON.stringify(state,null,2)],{type:'application/json'});
+  const a = document.createElement('a'); a.href=URL.createObjectURL(blob);
+  a.download='meetingrobot-devlog.json'; a.click(); showToast('Exported!');
+}
+
+// ─── UI HELPERS ───
+function showSection(name) {
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.getElementById('section-'+name).classList.add('active');
+}
+function setActive(id) {
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+function formatDate(d) { return new Date(d+'T12:00:00').toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'}); }
+function showToast(msg) { const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2800); }
+
+loadState();
+</script>
+</body>
+</html>
