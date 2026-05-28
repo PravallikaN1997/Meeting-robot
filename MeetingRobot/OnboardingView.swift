@@ -82,7 +82,7 @@ struct OnboardingView: View {
     private var mainContent: some View {
         ZStack {
             RoundedRectangle(cornerRadius: 24)
-                .fill(isDarkMode ? Color(hex: "111111") : Color.white)
+                .fill(isDarkMode ? Color(hex: "1A1A1E") : Color.white)
                 .shadow(color: isDarkMode ? .clear : .black.opacity(0.10), radius: 20, x: 0, y: 8)
                 .overlay {
                     if isDarkMode {
@@ -144,7 +144,7 @@ struct OnboardingView: View {
             Button(action: { print("Not interested tapped") }) {
                 Text("Not Interested")
                     .font(.caption)
-                    .foregroundColor(.gray)
+                    .foregroundColor(isDarkMode ? Color.white.opacity(0.40) : .gray)
             }
             .buttonStyle(.plain)
             .padding(.top, 20)
@@ -194,8 +194,8 @@ struct OnboardingView: View {
             }
             .frame(maxWidth: .infinity)
             .padding(.vertical, MRSpacing.md)
-            .background(isDarkMode ? Color.white : Color.black)
-            .foregroundColor(isDarkMode ? .black : .white)
+            .background(isDarkMode ? Color(hex: "F0F0F5") : Color.black)
+            .foregroundColor(isDarkMode ? Color(hex: "111111") : .white)
             .clipShape(Capsule())
         }
         .buttonStyle(ScalePressStyle())
@@ -216,7 +216,7 @@ struct OnboardingView: View {
             .background(Color.clear)
             .foregroundColor(isDarkMode ? .white : .primary)
             .overlay(Capsule().stroke(
-                isDarkMode ? Color.white.opacity(0.65) : Color.black.opacity(0.25),
+                isDarkMode ? Color.white.opacity(0.20) : Color.black.opacity(0.25),
                 lineWidth: 1.5
             ))
         }
