@@ -100,45 +100,51 @@ struct ConfirmationView: View {
 private struct CelebrationView: View {
     var body: some View {
         _CelebrationNSView()
-            .frame(width: 200, height: 250)
-            .scaleEffect(0.7)
-            .frame(width: 140, height: 175)
-            .clipped()
+            .frame(width: 160, height: 200)
     }
 }
 
 private struct _CelebrationNSView: NSViewRepresentable {
-    func makeNSView(context: Context) -> LottieAnimationView {
-        // Try loading by name first
-        if let animation = LottieAnimation.named("celebrate") {
-            let view = LottieAnimationView(animation: animation)
-            view.contentMode = .scaleAspectFit
-            view.loopMode = .loop
-            view.animationSpeed = 1.0
-            view.play()
-            print("✅ celebrate.json loaded successfully")
-            return view
+    func makeNSView(context: Context) -> NSView {
+        let container = NSView()
+        container.wantsLayer = true
+
+        guard let url = Bundle.main.url(
+            forResource: "celebrate",
+            withExtension: "json"
+        ) else {
+            print("❌ celebrate.json not found in bundle")
+            return container
         }
 
-        // Fallback: try loading from bundle directly
-        if let path = Bundle.main.path(forResource: "celebrate",
-                                        ofType: "json"),
-           let animation = LottieAnimation.filepath(path) {
-            let view = LottieAnimationView(animation: animation)
-            view.contentMode = .scaleAspectFit
-            view.loopMode = .loop
-            view.animationSpeed = 1.0
-            view.play()
-            print("✅ celebrate.json loaded from bundle path")
-            return view
-        }
+        print("✅ celebrate.json found at: \(url)")
 
-        print("❌ celebrate.json failed to load")
-        let view = LottieAnimationView()
-        return view
+        let animation = LottieAnimation.filepath(url.path)
+        let lottieView = LottieAnimationView(
+            animation: animation
+        )
+        lottieView.contentMode = .scaleAspectFit
+        lottieView.loopMode = .loop
+        lottieView.animationSpeed = 1.0
+        lottieView.translatesAutoresizingMaskIntoConstraints = false
+        container.addSubview(lottieView)
+
+        NSLayoutConstraint.activate([
+            lottieView.leadingAnchor.constraint(
+                equalTo: container.leadingAnchor),
+            lottieView.trailingAnchor.constraint(
+                equalTo: container.trailingAnchor),
+            lottieView.topAnchor.constraint(
+                equalTo: container.topAnchor),
+            lottieView.bottomAnchor.constraint(
+                equalTo: container.bottomAnchor)
+        ])
+
+        lottieView.play()
+        return container
     }
-    func updateNSView(_ nsView: LottieAnimationView,
-                      context: Context) {}
+
+    func updateNSView(_ nsView: NSView, context: Context) {}
 }
 
 // ScalePressStyle is private in OnboardingView.swift (file-scoped),
