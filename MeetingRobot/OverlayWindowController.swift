@@ -36,7 +36,7 @@ class OverlayWindowController: NSObject {
 
         guard let meeting = calendarManager.todayMeetings.first(where: {
             let mins = $0.minutesUntilStart
-            return mins > 0 && mins <= threshold &&
+            return mins > 0 && mins <= 60 &&
                    !snoozedMeetingIds.contains($0.id) &&
                    !dismissedMeetingIds.contains($0.id)
         }) else {
