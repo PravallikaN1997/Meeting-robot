@@ -48,7 +48,7 @@ struct OverlayView: View {
         bubbleText = "\(meeting.title) in \(meeting.countdownLabel)!"
 
         // Walk in slowly
-        withAnimation(.linear(duration: 20)) {
+        withAnimation(.linear(duration: 8)) {
             robotX = screenWidth * 0.25
         }
 
@@ -60,7 +60,7 @@ struct OverlayView: View {
         }
 
         // Hide bubble after 10s
-        DispatchQueue.main.asyncAfter(deadline: .now() + 23) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 13) {
             if !isClickMessage {
                 withAnimation(.easeInOut(duration: 0.4)) {
                     showBubble = false
@@ -68,15 +68,15 @@ struct OverlayView: View {
             }
         }
 
-        // Walk off to right after 25s
-        DispatchQueue.main.asyncAfter(deadline: .now() + 25) {
-            withAnimation(.linear(duration: 20)) {
+        // Walk off to right after 15s
+        DispatchQueue.main.asyncAfter(deadline: .now() + 15) {
+            withAnimation(.linear(duration: 8)) {
                 robotX = screenWidth + 200
             }
         }
 
         // Finished after full walk
-        DispatchQueue.main.asyncAfter(deadline: .now() + 46) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 24) {
             onFinished()
         }
     }
@@ -146,7 +146,7 @@ struct _WalkingRobotNSView: NSViewRepresentable {
         let view = LottieAnimationView(name: "robot")
         view.contentMode = .scaleAspectFit
         view.loopMode = .loop
-        view.animationSpeed = 0.5
+        view.animationSpeed = 0.8
         view.play()
         return view
     }
