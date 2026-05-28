@@ -106,6 +106,9 @@ private struct CelebrationView: View {
 
 private struct _CelebrationNSView: NSViewRepresentable {
     func makeNSView(context: Context) -> NSView {
+        let allFiles = Bundle.main.paths(forResourcesOfType: "json",
+                                          inDirectory: nil)
+        print("All JSON files in bundle: \(allFiles)")
         let container = NSView()
         container.wantsLayer = true
 

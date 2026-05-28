@@ -22,6 +22,7 @@
 		858F77432FC8934500517186 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = II002222FC76A190054E80E /* SettingsView.swift */; };
 		858F77452FC8934500517186 /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 858F77352FC8934500517186 /* Lottie */; };
 		858F77472FC8934500517186 /* robot.json in Resources */ = {isa = PBXBuildFile; fileRef = BB008882FC76A190054E80E /* robot.json */; };
+		OO001112FC76A190054E80E /* celebrate.json in Resources */ = {isa = PBXBuildFile; fileRef = NN002222FC76A190054E80E /* celebrate.json */; };
 		858F77482FC8934500517186 /* SettingsView.swift in Resources */ = {isa = PBXBuildFile; fileRef = II002222FC76A190054E80E /* SettingsView.swift */; };
 		858F77492FC8934500517186 /* robot-bg.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = EE001112FC76A190054E80E /* robot-bg.mp4 */; };
 		858F774A2FC8934500517186 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BB009992FC76A190054E80E /* Assets.xcassets */; };
@@ -34,6 +35,7 @@
 		CC006662FC76A190054E80E /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB006662FC76A190054E80E /* OnboardingView.swift */; };
 		CC007772FC76A190054E80E /* ConfirmationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB007772FC76A190054E80E /* ConfirmationView.swift */; };
 		CC008882FC76A190054E80E /* robot.json in Resources */ = {isa = PBXBuildFile; fileRef = BB008882FC76A190054E80E /* robot.json */; };
+		NN001112FC76A190054E80E /* celebrate.json in Resources */ = {isa = PBXBuildFile; fileRef = NN002222FC76A190054E80E /* celebrate.json */; };
 		CC009992FC76A190054E80E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BB009992FC76A190054E80E /* Assets.xcassets */; };
 		DD001112FC76A190054E80E /* FluidGradientBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD002222FC76A190054E80E /* FluidGradientBackground.swift */; };
 		EE002222FC76A190054E80E /* robot-bg.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = EE001112FC76A190054E80E /* robot-bg.mp4 */; };
@@ -58,6 +60,7 @@
 		BB006662FC76A190054E80E /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		BB007772FC76A190054E80E /* ConfirmationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmationView.swift; sourceTree = "<group>"; };
 		BB008882FC76A190054E80E /* robot.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = robot.json; sourceTree = "<group>"; };
+		NN002222FC76A190054E80E /* celebrate.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = celebrate.json; sourceTree = "<group>"; };
 		LL002222FC76A190054E80E /* cursor-animation.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "cursor-animation.json"; sourceTree = "<group>"; };
 		BB009992FC76A190054E80E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		BB00AAA2FC76A190054E80E /* MeetingRobot.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MeetingRobot.entitlements; sourceTree = "<group>"; };
@@ -120,6 +123,7 @@
 				BB007772FC76A190054E80E /* ConfirmationView.swift */,
 				DD002222FC76A190054E80E /* FluidGradientBackground.swift */,
 				BB008882FC76A190054E80E /* robot.json */,
+				NN002222FC76A190054E80E /* celebrate.json */,
 				LL002222FC76A190054E80E /* cursor-animation.json */,
 				EE001112FC76A190054E80E /* robot-bg.mp4 */,
 				FF002222FC76A190054E80E /* CalendarManager.swift */,
@@ -221,6 +225,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CC008882FC76A190054E80E /* robot.json in Resources */,
+				NN001112FC76A190054E80E /* celebrate.json in Resources */,
 				LL001112FC76A190054E80E /* cursor-animation.json in Resources */,
 				858F77332FC88F3100517186 /* SettingsView.swift in Resources */,
 				EE002222FC76A190054E80E /* robot-bg.mp4 in Resources */,
@@ -233,6 +238,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				858F77472FC8934500517186 /* robot.json in Resources */,
+				OO001112FC76A190054E80E /* celebrate.json in Resources */,
 				MM001112FC76A190054E80E /* cursor-animation.json in Resources */,
 				858F77482FC8934500517186 /* SettingsView.swift in Resources */,
 				858F77492FC8934500517186 /* robot-bg.mp4 in Resources */,
