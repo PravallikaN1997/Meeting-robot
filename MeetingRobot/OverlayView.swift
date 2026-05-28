@@ -16,6 +16,8 @@ struct OverlayView: View {
     @State private var phase: WalkPhase = .walkingIn
     @State private var isHovering: Bool = false
     @State private var cursorOffset: CGSize = .zero
+    @State private var isPaused: Bool = false
+    @State private var isClickPaused: Bool = false
 
     enum WalkPhase {
         case walkingIn, stopped, walkingOut, done
@@ -67,6 +69,10 @@ struct OverlayView: View {
                     withAnimation(.spring(response: 0.3)) {
                         isHovering = hovering
                     }
+                    // Only pause if not click-paused already
+                    if !isClickPaused {
+                        isPaused = hovering
+                    }
                     if hovering {
                         NSCursor.pointingHand.push()
                     } else {
@@ -95,39 +101,42 @@ struct OverlayView: View {
 
             switch phase {
             case .walkingIn:
-                if robotX < stopAtX {
-                    robotX += step
-                } else {
-                    robotX = stopAtX
-                    phase = .stopped
-                    NSSound(named: NSSound.Name("Funk"))?.play()
-                    withAnimation(.spring(response: 0.4)) {
-                        showBubble = true
-                    }
-                    // Hide bubble and start walking out after 12s
-                    DispatchQueue.main.asyncAfter(
-                        deadline: .now() + 12
-                    ) {
-                        if !isClickMessage {
-                            withAnimation(.easeInOut(duration: 0.4)) {
-                                showBubble = false
-                            }
+                if !isPaused {
+                    if robotX < stopAtX {
+                        robotX += step
+                    } else {
+                        robotX = stopAtX
+                        phase = .stopped
+                        NSSound(named: NSSound.Name("Funk"))?.play()
+                        withAnimation(.spring(response: 0.4)) {
+                            showBubble = true
                         }
                         DispatchQueue.main.asyncAfter(
-                            deadline: .now() + 1
+                            deadline: .now() + 12
                         ) {
-                            phase = .walkingOut
+                            if !isClickMessage {
+                                withAnimation(.easeInOut(duration: 0.4)) {
+                                    showBubble = false
+                                }
+                            }
+                            DispatchQueue.main.asyncAfter(
+                                deadline: .now() + 1
+                            ) {
+                                phase = .walkingOut
+                            }
                         }
                     }
                 }
 
             case .walkingOut:
-                if robotX < screenWidth + 120 {
-                    robotX += step
-                } else {
-                    phase = .done
-                    walkTimer?.invalidate()
-                    onFinished()
+                if !isPaused {
+                    if robotX < screenWidth + 120 {
+                        robotX += step
+                    } else {
+                        phase = .done
+                        walkTimer?.invalidate()
+                        onFinished()
+                    }
                 }
 
             case .stopped, .done:
@@ -138,6 +147,8 @@ struct OverlayView: View {
 
     private func handleTap() {
         isClickMessage = true
+        isClickPaused = true
+        isPaused = true
         bubbleText = clickMessages[
             clickMessageIndex % clickMessages.count
         ]
@@ -145,11 +156,19 @@ struct OverlayView: View {
         withAnimation(.spring(response: 0.3)) {
             showBubble = true
         }
+        // After 10s message + 3s pause, resume walking
         DispatchQueue.main.asyncAfter(deadline: .now() + 10) {
             withAnimation(.easeInOut(duration: 0.4)) {
                 showBubble = false
             }
             isClickMessage = false
+            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                isClickPaused = false
+                // Only unpause if not hovering
+                if !isHovering {
+                    isPaused = false
+                }
+            }
         }
     }
 
