@@ -37,7 +37,9 @@ struct MenuBarView: View {
             // Today's meetings list
             ScrollView {
                 VStack(spacing: 0) {
-                    if calendarManager.todayMeetings.isEmpty {
+                    if calendarManager.authorizationStatus != .fullAccess {
+                        permissionRequest
+                    } else if calendarManager.todayMeetings.isEmpty {
                         emptyState
                     } else {
                         ForEach(calendarManager.todayMeetings) { meeting in
@@ -105,6 +107,28 @@ struct MenuBarView: View {
         }
         .padding(.horizontal, 14)
         .padding(.vertical, 10)
+    }
+
+    // MARK: - Permission request
+
+    private var permissionRequest: some View {
+        VStack(spacing: 12) {
+            Image(systemName: "calendar.badge.exclamationmark")
+                .font(.system(size: 28))
+                .foregroundColor(.orange)
+            Text("Calendar access needed")
+                .font(.system(size: 13, weight: .medium))
+            Text("Grant access to see your meetings")
+                .font(.system(size: 11))
+                .foregroundColor(.secondary)
+            Button("Grant Access") {
+                Task { await calendarManager.requestAccess() }
+            }
+            .buttonStyle(.borderedProminent)
+            .controlSize(.small)
+        }
+        .frame(maxWidth: .infinity)
+        .padding(.vertical, 24)
     }
 
     // MARK: - Empty state
