@@ -47,36 +47,35 @@ struct OverlayView: View {
         robotX = -100
         bubbleText = "\(meeting.title) in \(meeting.countdownLabel)!"
 
-        // Walk in slowly
-        withAnimation(.linear(duration: 8)) {
-            robotX = screenWidth * 0.25
+        // Phase 1: Walk from left edge to 30% of screen
+        // Human walking pace — very slow and natural
+        withAnimation(.linear(duration: 12)) {
+            robotX = screenWidth * 0.30
         }
 
-        // Show bubble after robot arrives
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-            withAnimation(.spring(response: 0.4)) {
+        // Show bubble when robot reaches 30%
+        DispatchQueue.main.asyncAfter(deadline: .now() + 12) {
+            withAnimation(.spring(response: 0.5)) {
                 showBubble = true
             }
         }
 
-        // Hide bubble after 10s
-        DispatchQueue.main.asyncAfter(deadline: .now() + 13) {
+        // Phase 2: Stay at 30% for 12 seconds while bubble shows
+        // Then continue walking to right edge — same slow pace
+        DispatchQueue.main.asyncAfter(deadline: .now() + 24) {
             if !isClickMessage {
-                withAnimation(.easeInOut(duration: 0.4)) {
+                withAnimation(.easeInOut(duration: 0.5)) {
                     showBubble = false
                 }
             }
-        }
-
-        // Walk off to right after 15s
-        DispatchQueue.main.asyncAfter(deadline: .now() + 15) {
-            withAnimation(.linear(duration: 8)) {
-                robotX = screenWidth + 200
+            // Walk remaining 70% of screen at same pace
+            withAnimation(.linear(duration: 28)) {
+                robotX = screenWidth + 120
             }
         }
 
-        // Finished after full walk
-        DispatchQueue.main.asyncAfter(deadline: .now() + 24) {
+        // Clean up after robot exits
+        DispatchQueue.main.asyncAfter(deadline: .now() + 55) {
             onFinished()
         }
     }
@@ -146,7 +145,7 @@ struct _WalkingRobotNSView: NSViewRepresentable {
         let view = LottieAnimationView(name: "robot")
         view.contentMode = .scaleAspectFit
         view.loopMode = .loop
-        view.animationSpeed = 0.8
+        view.animationSpeed = 0.35
         view.play()
         return view
     }
