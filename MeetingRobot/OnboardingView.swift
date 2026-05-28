@@ -110,7 +110,7 @@ struct OnboardingView: View {
             }
             .offset(x: robotOffset)
 
-            Spacer().frame(height: MRSpacing.lg)
+            Spacer().frame(height: 8)
 
             Text("Meetbot")
                 .font(.mrHeading)
@@ -133,7 +133,7 @@ struct OnboardingView: View {
                 .lineLimit(2)
                 .padding(.horizontal, 24)
 
-            Spacer().frame(height: 8)
+            Spacer().frame(height: 20)
 
             appleButton
 
@@ -159,7 +159,7 @@ struct OnboardingView: View {
             DispatchQueue.main.asyncAfter(deadline: .now() + 4.5) {
                 NotificationCenter.default.post(name: .init("PlayRobotWave"), object: nil)
             }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 8.0) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
                 startMessageCycle()
             }
         }

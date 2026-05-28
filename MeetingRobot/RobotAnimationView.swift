@@ -11,15 +11,15 @@ struct RobotAnimationView: View {
                 Circle()
                     .fill(Color.blue.opacity(0.30))
                     .blur(radius: 28)
-                    .frame(width: 80, height: 80)
+                    .frame(width: 100, height: 100)
             }
             _LottieNSView(loopMode: loopMode)
                 .frame(width: 346, height: 346)
-                .scaleEffect(0.347)
-                .frame(width: 120, height: 120)
+                .scaleEffect(0.405)
+                .frame(width: 140, height: 140)
                 .clipped()
         }
-        .frame(width: 120, height: 120)
+        .frame(width: 140, height: 140)
     }
 }
 
