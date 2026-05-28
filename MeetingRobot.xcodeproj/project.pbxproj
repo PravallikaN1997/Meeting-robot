@@ -19,6 +19,7 @@
 		CC008882FC76A190054E80E /* robot.json in Resources */ = {isa = PBXBuildFile; fileRef = BB008882FC76A190054E80E /* robot.json */; };
 		CC009992FC76A190054E80E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BB009992FC76A190054E80E /* Assets.xcassets */; };
 		EE002222FC76A190054E80E /* robot-bg.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = EE001112FC76A190054E80E /* robot-bg.mp4 */; };
+		FF001112FC76A190054E80E /* CalendarManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF002222FC76A190054E80E /* CalendarManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -35,6 +36,7 @@
 		BB009992FC76A190054E80E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		BB00AAA2FC76A190054E80E /* MeetingRobot.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MeetingRobot.entitlements; sourceTree = "<group>"; };
 		EE001112FC76A190054E80E /* robot-bg.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "robot-bg.mp4"; sourceTree = "<group>"; };
+		FF002222FC76A190054E80E /* CalendarManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -78,6 +80,7 @@
 				DD002222FC76A190054E80E /* FluidGradientBackground.swift */,
 				BB008882FC76A190054E80E /* robot.json */,
 				EE001112FC76A190054E80E /* robot-bg.mp4 */,
+				FF002222FC76A190054E80E /* CalendarManager.swift */,
 				BB009992FC76A190054E80E /* Assets.xcassets */,
 				BB00AAA2FC76A190054E80E /* MeetingRobot.entitlements */,
 			);
@@ -170,6 +173,7 @@
 				CC006662FC76A190054E80E /* OnboardingView.swift in Sources */,
 				CC007772FC76A190054E80E /* ConfirmationView.swift in Sources */,
 				DD001112FC76A190054E80E /* FluidGradientBackground.swift in Sources */,
+				FF001112FC76A190054E80E /* CalendarManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
