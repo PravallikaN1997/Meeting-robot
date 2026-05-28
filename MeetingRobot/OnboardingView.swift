@@ -4,6 +4,7 @@ import EventKit
 
 struct OnboardingView: View {
     @Binding var hasCompletedOnboarding: Bool
+    @AppStorage("isDarkMode") var isDarkMode: Bool = false
     @State private var showConfirmation = false
     @State private var messageIndex = 0
     @State private var robotOffset: CGFloat = -500
@@ -17,6 +18,8 @@ struct OnboardingView: View {
         "Never miss a standup again 🙌",
         "Beep boop... loading your schedule 🔄",
         "I walk so your meetings don't sneak up on you 🚶",
+        "Your calendar, but make it smart 🧠",
+        "Zero late arrivals guaranteed 🎯",
     ]
 
     var body: some View {
@@ -38,42 +41,129 @@ struct OnboardingView: View {
                     .transition(.opacity)
             }
         }
+        .preferredColorScheme(isDarkMode ? .dark : .light)
         .animation(.easeInOut(duration: 0.5), value: showConfirmation)
+        .overlay(alignment: .topTrailing) {
+            modeToggle
+        }
     }
 
-    // MARK: - Main content
+    // MARK: - Mode toggle
+
+    private var modeToggle: some View {
+        Button {
+            withAnimation(.easeInOut(duration: 0.25)) {
+                isDarkMode.toggle()
+            }
+        } label: {
+            HStack(spacing: 6) {
+                Image(systemName: "sun.max.fill")
+                    .font(.system(size: 14, weight: .medium))
+                    .opacity(isDarkMode ? 0.35 : 1.0)
+                Image(systemName: "moon.fill")
+                    .font(.system(size: 14, weight: .medium))
+                    .opacity(isDarkMode ? 1.0 : 0.35)
+            }
+            .padding(.horizontal, 14)
+            .frame(height: 36)
+            .background(isDarkMode ? Color(white: 0.15) : Color.white)
+            .foregroundColor(isDarkMode ? .white : .black)
+            .clipShape(Capsule())
+            .shadow(color: .black.opacity(isDarkMode ? 0 : 0.12), radius: 6, x: 0, y: 2)
+        }
+        .buttonStyle(.plain)
+        .animation(.easeInOut(duration: 0.25), value: isDarkMode)
+        .padding(.top, 16)
+        .padding(.trailing, 20)
+    }
+
+    // MARK: - Main content (card wrapper)
 
     private var mainContent: some View {
+        ZStack {
+            RoundedRectangle(cornerRadius: 24)
+                .fill(isDarkMode ? Color(hex: "111111") : Color.white)
+                .shadow(color: isDarkMode ? .clear : .black.opacity(0.10), radius: 20, x: 0, y: 8)
+                .overlay {
+                    if isDarkMode {
+                        RoundedRectangle(cornerRadius: 24)
+                            .stroke(Color.white.opacity(0.06), lineWidth: 1)
+                    }
+                }
+
+            cardContent
+        }
+        .frame(width: 400)
+        .fixedSize(horizontal: false, vertical: true)
+    }
+
+    // MARK: - Card inner content
+
+    private var cardContent: some View {
         VStack(spacing: 0) {
-            Spacer().frame(maxHeight: 32)
+            // Robot + bubble travel together during walk-in
+            VStack(spacing: 8) {
+                speechBubble
+                    .opacity(showBubble ? 1 : 0)
 
-            speechBubble
-                .opacity(showBubble ? 1 : 0)
-
-            Spacer().frame(height: MRSpacing.xs)
-
-            RobotAnimationView()
-                .offset(x: robotOffset)
+                RobotAnimationView()
+            }
+            .offset(x: robotOffset)
 
             Spacer().frame(height: MRSpacing.lg)
 
             Text("Meeting Robot")
                 .font(.mrHeading)
-                .foregroundColor(.white)
+                .foregroundColor(isDarkMode ? .white : .primary)
+                .multilineTextAlignment(.center)
 
-            Spacer().frame(maxHeight: 32)
+            Spacer().frame(height: 6)
 
-            bottomStack
+            Text("Your AI meeting assistant")
+                .font(.subheadline)
+                .foregroundColor(isDarkMode ? Color.white.opacity(0.55) : .secondary)
+                .multilineTextAlignment(.center)
+
+            Spacer().frame(height: 12)
+
+            Text("So I know when your meetings are and can prep you in time.")
+                .font(.caption)
+                .foregroundColor(isDarkMode ? Color.white.opacity(0.40) : .gray)
+                .multilineTextAlignment(.center)
+                .lineLimit(2)
+                .padding(.horizontal, 24)
+
+            Spacer().frame(height: 8)
+
+            appleButton
+
+            Spacer().frame(height: MRSpacing.sm)
+
+            googleButton
+
+            Button(action: { print("Not interested tapped") }) {
+                Text("Not Interested")
+                    .font(.caption)
+                    .foregroundColor(.gray)
+            }
+            .buttonStyle(.plain)
+            .padding(.top, 4)
         }
+        .padding(.horizontal, 28)
+        .padding(.top, 28)
+        .padding(.bottom, 28)
         .onAppear {
-            withAnimation(.spring(response: 4.0, dampingFraction: 0.9).delay(1.0)) {
+            withAnimation(.spring(response: 3.5, dampingFraction: 0.85).delay(0.5)) {
                 robotOffset = 0
             }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 6.0) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 4.5) {
+                NotificationCenter.default.post(name: .init("PlayRobotWave"), object: nil)
+            }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 8.0) {
                 withAnimation { showBubble = true }
             }
         }
-        .onReceive(Timer.publish(every: 10, on: .main, in: .common).autoconnect()) { _ in
+        .onReceive(Timer.publish(every: 12, on: .main, in: .common).autoconnect()) { _ in
             withAnimation(.easeInOut(duration: 0.5)) {
                 messageIndex = (messageIndex + 1) % messages.count
             }
@@ -93,19 +183,8 @@ struct OnboardingView: View {
                 }
             }
         }
-        .frame(maxWidth: 220, maxHeight: 60)
+        .frame(maxWidth: 280, maxHeight: 60)
         .animation(.spring(response: 0.38, dampingFraction: 0.62), value: messageIndex)
-    }
-
-    // MARK: - App name + sign-in buttons
-
-    private var bottomStack: some View {
-        VStack(spacing: MRSpacing.sm) {
-            appleButton
-            googleButton
-        }
-        .padding(.horizontal, MRSpacing.xl)
-        .padding(.bottom, MRSpacing.xl)
     }
 
     // MARK: - Buttons
@@ -120,8 +199,8 @@ struct OnboardingView: View {
             }
             .frame(maxWidth: .infinity)
             .padding(.vertical, MRSpacing.md)
-            .background(Color.white)
-            .foregroundColor(.black)
+            .background(isDarkMode ? Color.white : Color.black)
+            .foregroundColor(isDarkMode ? .black : .white)
             .clipShape(Capsule())
         }
         .buttonStyle(ScalePressStyle())
@@ -140,8 +219,11 @@ struct OnboardingView: View {
             .frame(maxWidth: .infinity)
             .padding(.vertical, MRSpacing.md)
             .background(Color.clear)
-            .foregroundColor(.white)
-            .overlay(Capsule().stroke(Color.white.opacity(0.65), lineWidth: 1.5))
+            .foregroundColor(isDarkMode ? .white : .primary)
+            .overlay(Capsule().stroke(
+                isDarkMode ? Color.white.opacity(0.65) : Color.black.opacity(0.25),
+                lineWidth: 1.5
+            ))
         }
         .buttonStyle(ScalePressStyle())
     }
@@ -215,9 +297,7 @@ private struct ScalePressStyle: ButtonStyle {
     }
 }
 
-
-
 #Preview {
     OnboardingView(hasCompletedOnboarding: .constant(false))
-        .frame(width: 600, height: 560)
+        .frame(width: 600, height: 700)
 }
