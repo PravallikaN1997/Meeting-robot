@@ -7,6 +7,24 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		858F77332FC88F3100517186 /* SettingsView.swift in Resources */ = {isa = PBXBuildFile; fileRef = II002222FC76A190054E80E /* SettingsView.swift */; };
+		858F77382FC8934500517186 /* MeetingRobotApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB001112FC76A190054E80E /* MeetingRobotApp.swift */; };
+		858F77392FC8934500517186 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB002222FC76A190054E80E /* ContentView.swift */; };
+		858F773A2FC8934500517186 /* DesignSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB003332FC76A190054E80E /* DesignSystem.swift */; };
+		858F773B2FC8934500517186 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB004442FC76A190054E80E /* Theme.swift */; };
+		858F773C2FC8934500517186 /* RobotAnimationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB005552FC76A190054E80E /* RobotAnimationView.swift */; };
+		858F773D2FC8934500517186 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB006662FC76A190054E80E /* OnboardingView.swift */; };
+		858F773E2FC8934500517186 /* ConfirmationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB007772FC76A190054E80E /* ConfirmationView.swift */; };
+		858F773F2FC8934500517186 /* FluidGradientBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD002222FC76A190054E80E /* FluidGradientBackground.swift */; };
+		858F77402FC8934500517186 /* CalendarManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF002222FC76A190054E80E /* CalendarManager.swift */; };
+		858F77412FC8934500517186 /* MenuBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = GG002222FC76A190054E80E /* MenuBarView.swift */; };
+		858F77422FC8934500517186 /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = HH002222FC76A190054E80E /* DashboardView.swift */; };
+		858F77432FC8934500517186 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = II002222FC76A190054E80E /* SettingsView.swift */; };
+		858F77452FC8934500517186 /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 858F77352FC8934500517186 /* Lottie */; };
+		858F77472FC8934500517186 /* robot.json in Resources */ = {isa = PBXBuildFile; fileRef = BB008882FC76A190054E80E /* robot.json */; };
+		858F77482FC8934500517186 /* SettingsView.swift in Resources */ = {isa = PBXBuildFile; fileRef = II002222FC76A190054E80E /* SettingsView.swift */; };
+		858F77492FC8934500517186 /* robot-bg.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = EE001112FC76A190054E80E /* robot-bg.mp4 */; };
+		858F774A2FC8934500517186 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BB009992FC76A190054E80E /* Assets.xcassets */; };
 		AA0003332FC76A190054E80E /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = AA0002222FC76A190054E80E /* Lottie */; };
 		CC001112FC76A190054E80E /* MeetingRobotApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB001112FC76A190054E80E /* MeetingRobotApp.swift */; };
 		CC002222FC76A190054E80E /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB002222FC76A190054E80E /* ContentView.swift */; };
@@ -15,10 +33,9 @@
 		CC005552FC76A190054E80E /* RobotAnimationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB005552FC76A190054E80E /* RobotAnimationView.swift */; };
 		CC006662FC76A190054E80E /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB006662FC76A190054E80E /* OnboardingView.swift */; };
 		CC007772FC76A190054E80E /* ConfirmationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB007772FC76A190054E80E /* ConfirmationView.swift */; };
-		DD001112FC76A190054E80E /* FluidGradientBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD002222FC76A190054E80E /* FluidGradientBackground.swift */; };
 		CC008882FC76A190054E80E /* robot.json in Resources */ = {isa = PBXBuildFile; fileRef = BB008882FC76A190054E80E /* robot.json */; };
-		II001112FC76A190054E80E /* celebrate.json in Resources */ = {isa = PBXBuildFile; fileRef = II002222FC76A190054E80E /* celebrate.json */; };
 		CC009992FC76A190054E80E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BB009992FC76A190054E80E /* Assets.xcassets */; };
+		DD001112FC76A190054E80E /* FluidGradientBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD002222FC76A190054E80E /* FluidGradientBackground.swift */; };
 		EE002222FC76A190054E80E /* robot-bg.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = EE001112FC76A190054E80E /* robot-bg.mp4 */; };
 		FF001112FC76A190054E80E /* CalendarManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF002222FC76A190054E80E /* CalendarManager.swift */; };
 		GG001112FC76A190054E80E /* MenuBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = GG002222FC76A190054E80E /* MenuBarView.swift */; };
@@ -28,6 +45,7 @@
 
 /* Begin PBXFileReference section */
 		85679F892FC76A190054E80E /* MeetingRobot.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MeetingRobot.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		858F774E2FC8934500517186 /* MeetingRobot copy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "MeetingRobot copy.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		BB001112FC76A190054E80E /* MeetingRobotApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeetingRobotApp.swift; sourceTree = "<group>"; };
 		BB002222FC76A190054E80E /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		BB003332FC76A190054E80E /* DesignSystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignSystem.swift; sourceTree = "<group>"; };
@@ -35,11 +53,10 @@
 		BB005552FC76A190054E80E /* RobotAnimationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RobotAnimationView.swift; sourceTree = "<group>"; };
 		BB006662FC76A190054E80E /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		BB007772FC76A190054E80E /* ConfirmationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmationView.swift; sourceTree = "<group>"; };
-		DD002222FC76A190054E80E /* FluidGradientBackground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FluidGradientBackground.swift; sourceTree = "<group>"; };
 		BB008882FC76A190054E80E /* robot.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = robot.json; sourceTree = "<group>"; };
-		II002222FC76A190054E80E /* celebrate.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = celebrate.json; sourceTree = "<group>"; };
 		BB009992FC76A190054E80E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		BB00AAA2FC76A190054E80E /* MeetingRobot.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MeetingRobot.entitlements; sourceTree = "<group>"; };
+		DD002222FC76A190054E80E /* FluidGradientBackground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FluidGradientBackground.swift; sourceTree = "<group>"; };
 		EE001112FC76A190054E80E /* robot-bg.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "robot-bg.mp4"; sourceTree = "<group>"; };
 		FF002222FC76A190054E80E /* CalendarManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarManager.swift; sourceTree = "<group>"; };
 		GG002222FC76A190054E80E /* MenuBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarView.swift; sourceTree = "<group>"; };
@@ -53,6 +70,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				AA0003332FC76A190054E80E /* Lottie in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		858F77442FC8934500517186 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				858F77452FC8934500517186 /* Lottie in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -71,6 +96,7 @@
 			isa = PBXGroup;
 			children = (
 				85679F892FC76A190054E80E /* MeetingRobot.app */,
+				858F774E2FC8934500517186 /* MeetingRobot copy.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -87,7 +113,6 @@
 				BB007772FC76A190054E80E /* ConfirmationView.swift */,
 				DD002222FC76A190054E80E /* FluidGradientBackground.swift */,
 				BB008882FC76A190054E80E /* robot.json */,
-				II002222FC76A190054E80E /* celebrate.json */,
 				EE001112FC76A190054E80E /* robot-bg.mp4 */,
 				FF002222FC76A190054E80E /* CalendarManager.swift */,
 				GG002222FC76A190054E80E /* MenuBarView.swift */,
@@ -122,6 +147,26 @@
 			productReference = 85679F892FC76A190054E80E /* MeetingRobot.app */;
 			productType = "com.apple.product-type.application";
 		};
+		858F77342FC8934500517186 /* MeetingRobot copy */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 858F774B2FC8934500517186 /* Build configuration list for PBXNativeTarget "MeetingRobot copy" */;
+			buildPhases = (
+				858F77372FC8934500517186 /* Sources */,
+				858F77442FC8934500517186 /* Frameworks */,
+				858F77462FC8934500517186 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "MeetingRobot copy";
+			packageProductDependencies = (
+				858F77352FC8934500517186 /* Lottie */,
+			);
+			productName = MeetingRobot;
+			productReference = 858F774E2FC8934500517186 /* MeetingRobot copy.app */;
+			productType = "com.apple.product-type.application";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -146,15 +191,16 @@
 			);
 			mainGroup = 85679F802FC76A190054E80E;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				AA0001112FC76A190054E80E /* XCRemoteSwiftPackageReference "lottie-spm" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 85679F8A2FC76A190054E80E /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
-			packageReferences = (
-				AA0001112FC76A190054E80E /* XCRemoteSwiftPackageReference "lottie-spm" */,
-			);
 			targets = (
 				85679F882FC76A190054E80E /* MeetingRobot */,
+				858F77342FC8934500517186 /* MeetingRobot copy */,
 			);
 		};
 /* End PBXProject section */
@@ -165,9 +211,20 @@
 			buildActionMask = 2147483647;
 			files = (
 				CC008882FC76A190054E80E /* robot.json in Resources */,
-				II001112FC76A190054E80E /* celebrate.json in Resources */,
+				858F77332FC88F3100517186 /* SettingsView.swift in Resources */,
 				EE002222FC76A190054E80E /* robot-bg.mp4 in Resources */,
 				CC009992FC76A190054E80E /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		858F77462FC8934500517186 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				858F77472FC8934500517186 /* robot.json in Resources */,
+				858F77482FC8934500517186 /* SettingsView.swift in Resources */,
+				858F77492FC8934500517186 /* robot-bg.mp4 in Resources */,
+				858F774A2FC8934500517186 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -190,6 +247,25 @@
 				GG001112FC76A190054E80E /* MenuBarView.swift in Sources */,
 				HH001112FC76A190054E80E /* DashboardView.swift in Sources */,
 				II001112FC76A190054E80E /* SettingsView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		858F77372FC8934500517186 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				858F77382FC8934500517186 /* MeetingRobotApp.swift in Sources */,
+				858F77392FC8934500517186 /* ContentView.swift in Sources */,
+				858F773A2FC8934500517186 /* DesignSystem.swift in Sources */,
+				858F773B2FC8934500517186 /* Theme.swift in Sources */,
+				858F773C2FC8934500517186 /* RobotAnimationView.swift in Sources */,
+				858F773D2FC8934500517186 /* OnboardingView.swift in Sources */,
+				858F773E2FC8934500517186 /* ConfirmationView.swift in Sources */,
+				858F773F2FC8934500517186 /* FluidGradientBackground.swift in Sources */,
+				858F77402FC8934500517186 /* CalendarManager.swift in Sources */,
+				858F77412FC8934500517186 /* MenuBarView.swift in Sources */,
+				858F77422FC8934500517186 /* DashboardView.swift in Sources */,
+				858F77432FC8934500517186 /* SettingsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -323,7 +399,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				ENABLE_APP_SANDBOX = YES;
+				ENABLE_APP_SANDBOX = NO;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -355,7 +431,71 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				ENABLE_APP_SANDBOX = YES;
+				ENABLE_APP_SANDBOX = NO;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SELECTED_FILES = readonly;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSCalendarsUsageDescription = "MeetingRobot needs calendar access to alert you before meetings.";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.pk.MeetingRobot;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				REGISTER_APP_GROUPS = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		858F774C2FC8934500517186 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = MeetingRobot/MeetingRobot.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_APP_SANDBOX = NO;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SELECTED_FILES = readonly;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSCalendarsUsageDescription = "MeetingRobot needs calendar access to alert you before meetings.";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.pk.MeetingRobot;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				REGISTER_APP_GROUPS = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		858F774D2FC8934500517186 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = MeetingRobot/MeetingRobot.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_APP_SANDBOX = NO;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -399,20 +539,42 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		858F774B2FC8934500517186 /* Build configuration list for PBXNativeTarget "MeetingRobot copy" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				858F774C2FC8934500517186 /* Debug */,
+				858F774D2FC8934500517186 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		858F77362FC8934500517186 /* XCRemoteSwiftPackageReference "lottie-spm" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/airbnb/lottie-spm";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.4.0;
+			};
+		};
 		AA0001112FC76A190054E80E /* XCRemoteSwiftPackageReference "lottie-spm" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/airbnb/lottie-spm";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = "4.4.0";
+				minimumVersion = 4.4.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		858F77352FC8934500517186 /* Lottie */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 858F77362FC8934500517186 /* XCRemoteSwiftPackageReference "lottie-spm" */;
+			productName = Lottie;
+		};
 		AA0002222FC76A190054E80E /* Lottie */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = AA0001112FC76A190054E80E /* XCRemoteSwiftPackageReference "lottie-spm" */;

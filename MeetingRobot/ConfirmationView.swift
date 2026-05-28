@@ -101,8 +101,8 @@ private struct CelebrationView: View {
     var body: some View {
         _CelebrationNSView()
             .frame(width: 200, height: 250)
-            .scaleEffect(0.8)
-            .frame(width: 160, height: 200)
+            .scaleEffect(0.7)
+            .frame(width: 140, height: 175)
             .clipped()
     }
 }
@@ -116,8 +116,8 @@ private struct _CelebrationNSView: NSViewRepresentable {
         view.play()
         return view
     }
-
-    func updateNSView(_ nsView: LottieAnimationView, context: Context) {}
+    func updateNSView(_ nsView: LottieAnimationView,
+                      context: Context) {}
 }
 
 // ScalePressStyle is private in OnboardingView.swift (file-scoped),
