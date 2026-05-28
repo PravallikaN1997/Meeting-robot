@@ -69,13 +69,29 @@ struct OverlayView: View {
                     withAnimation(.spring(response: 0.3)) {
                         isHovering = hovering
                     }
-                    // Only pause if not click-paused already
-                    if !isClickPaused {
-                        isPaused = hovering
-                    }
                     if hovering {
+                        // Stop robot and show meeting reminder bubble
+                        if !isClickPaused {
+                            isPaused = true
+                            if !isClickMessage {
+                                bubbleText = "\(meeting.title) in \(meeting.countdownLabel)!"
+                                withAnimation(.spring(response: 0.4)) {
+                                    showBubble = true
+                                }
+                            }
+                        }
                         NSCursor.pointingHand.push()
                     } else {
+                        // Resume walking and hide bubble
+                        // (unless click-paused)
+                        if !isClickPaused {
+                            isPaused = false
+                            if !isClickMessage {
+                                withAnimation(.easeInOut(duration: 0.3)) {
+                                    showBubble = false
+                                }
+                            }
+                        }
                         NSCursor.pop()
                     }
                 }
