@@ -6,7 +6,7 @@ struct OnboardingView: View {
     @AppStorage("isDarkMode") var isDarkMode: Bool = false
     @State private var showConfirmation = false
     @State private var messageIndex = 0
-    @State private var robotOffset: CGFloat = -500
+    @State private var robotOffset: CGFloat = 0
     @State private var showBubble = false
     @State private var bubbleVisible: Bool = false
 
@@ -109,7 +109,6 @@ struct OnboardingView: View {
                 RobotAnimationView()
                     .padding(.bottom, -20)
             }
-            .offset(x: robotOffset)
 
             Spacer().frame(height: 8)
 
@@ -154,12 +153,16 @@ struct OnboardingView: View {
         .padding(.top, 28)
         .padding(.bottom, 28)
         .onAppear {
-            withAnimation(.spring(response: 3.5, dampingFraction: 0.85).delay(0.5)) {
-                robotOffset = 0
+            // Robot starts centered, no walk-in
+            robotOffset = 0
+
+            // Wait 1.5 seconds then play wave
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                NotificationCenter.default.post(
+                    name: .init("PlayRobotWave"), object: nil)
             }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 4.5) {
-                NotificationCenter.default.post(name: .init("PlayRobotWave"), object: nil)
-            }
+
+            // Start messages after 5 seconds
             DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
                 startMessageCycle()
             }
