@@ -6,9 +6,10 @@ struct OnboardingView: View {
     @AppStorage("isDarkMode") var isDarkMode: Bool = false
     @State private var showConfirmation = false
     @State private var messageIndex = 0
-    @State private var robotOffset: CGFloat = 0
     @State private var showBubble = false
     @State private var bubbleVisible: Bool = false
+    @State private var robotOffset: CGFloat = 0
+    @Environment(\.accessibilityReduceMotion) var reduceMotion
 
     private let messages = [
         "Hey! I'm better than your alarm clock 🤖",
@@ -25,44 +26,34 @@ struct OnboardingView: View {
     var body: some View {
         ZStack {
             FluidGradientBackground()
-
-            Rectangle()
-                .fill(.ultraThinMaterial)
-                .ignoresSafeArea()
-
-            Color.black.opacity(0.35)
-                .ignoresSafeArea()
+            Rectangle().fill(.ultraThinMaterial).ignoresSafeArea()
+            Color.black.opacity(0.35).ignoresSafeArea()
 
             if showConfirmation {
                 ConfirmationView(hasCompletedOnboarding: $hasCompletedOnboarding)
                     .transition(.opacity)
             } else {
-                mainContent
-                    .transition(.opacity)
+                mainContent.transition(.opacity)
             }
         }
         .preferredColorScheme(isDarkMode ? .dark : .light)
         .animation(.easeInOut(duration: 0.5), value: showConfirmation)
-        .overlay(alignment: .topTrailing) {
-            modeToggle
-        }
+        .overlay(alignment: .topTrailing) { modeToggle }
     }
-
-    // MARK: - Mode toggle
 
     private var modeToggle: some View {
         Button {
-            withAnimation(.easeInOut(duration: 0.25)) {
-                isDarkMode.toggle()
-            }
+            withAnimation(.easeInOut(duration: 0.25)) { isDarkMode.toggle() }
         } label: {
             HStack(spacing: 6) {
                 Image(systemName: "sun.max.fill")
                     .font(.system(size: 14, weight: .medium))
                     .opacity(isDarkMode ? 0.35 : 1.0)
+                    .accessibilityHidden(true)
                 Image(systemName: "moon.fill")
                     .font(.system(size: 14, weight: .medium))
                     .opacity(isDarkMode ? 1.0 : 0.35)
+                    .accessibilityHidden(true)
             }
             .padding(.horizontal, 14)
             .frame(height: 36)
@@ -72,12 +63,10 @@ struct OnboardingView: View {
             .shadow(color: .black.opacity(isDarkMode ? 0 : 0.12), radius: 6, x: 0, y: 2)
         }
         .buttonStyle(.plain)
-        .animation(.easeInOut(duration: 0.25), value: isDarkMode)
+        .accessibilityLabel(isDarkMode ? "Switch to light mode" : "Switch to dark mode")
         .padding(.top, 16)
         .padding(.trailing, 20)
     }
-
-    // MARK: - Main content (card wrapper)
 
     private var mainContent: some View {
         ZStack {
@@ -90,24 +79,20 @@ struct OnboardingView: View {
                             .stroke(Color.white.opacity(0.06), lineWidth: 1)
                     }
                 }
-
+                .accessibilityHidden(true)
             cardContent
         }
         .frame(width: 400)
         .fixedSize(horizontal: false, vertical: true)
     }
 
-    // MARK: - Card inner content
-
     private var cardContent: some View {
         VStack(spacing: 0) {
-            // Robot + bubble travel together during walk-in
             VStack(spacing: -15) {
-                speechBubble
-                    .opacity(bubbleVisible ? 1 : 0)
-
-                RobotAnimationView()
-                    .padding(.bottom, -20)
+                speechBubble.opacity(bubbleVisible ? 1 : 0).accessibilityHidden(true)
+                RobotAnimationView().padding(.bottom, -20)
+                    .accessibilityLabel("Meetbot robot animation")
+                    .accessibilityAddTraits(.isImage)
             }
 
             Spacer().frame(height: 8)
@@ -119,7 +104,7 @@ struct OnboardingView: View {
 
             Spacer().frame(height: 4)
 
-            Text("Your AI meeting assistant")
+            Text("Your meeting assistant")
                 .font(.subheadline)
                 .foregroundColor(isDarkMode ? Color.white.opacity(0.55) : .secondary)
                 .multilineTextAlignment(.center)
@@ -137,48 +122,42 @@ struct OnboardingView: View {
 
             appleButton
 
-            Spacer().frame(height: 12)
+            Spacer().frame(height: 20)
 
-            googleButton
-
-            Button(action: { print("Not interested tapped") }) {
+            Button(action: {
+                NSApplication.shared.keyWindow?.close()
+            }) {
                 Text("Not Interested")
                     .font(.caption)
                     .foregroundColor(isDarkMode ? Color.white.opacity(0.40) : .gray)
             }
             .buttonStyle(.plain)
-            .padding(.top, 20)
+            .accessibilityLabel("Not interested, close setup")
+            .accessibilityHint("Closes this window. You can set up later from the menu bar.")
+            .padding(.bottom, 4)
         }
         .padding(.horizontal, 28)
         .padding(.top, 28)
         .padding(.bottom, 28)
         .onAppear {
-            // Robot starts centered, no walk-in
             robotOffset = 0
-
-            // Wait 1.5 seconds then play wave
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-                NotificationCenter.default.post(
-                    name: .init("PlayRobotWave"), object: nil)
+            if !reduceMotion {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                    NotificationCenter.default.post(name: .init("PlayRobotWave"), object: nil)
+                }
             }
-
-            // Start messages after 5 seconds
             DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
                 startMessageCycle()
             }
         }
     }
 
-    // MARK: - Speech bubble
-
     private var speechBubble: some View {
         ZStack {
             ForEach(messages.indices, id: \.self) { i in
                 if i == messageIndex {
                     SpeechBubbleView(text: messages[i])
-                        .transition(
-                            .scale(scale: 0.8).combined(with: .opacity)
-                        )
+                        .transition(reduceMotion ? .opacity : .scale(scale: 0.8).combined(with: .opacity))
                 }
             }
         }
@@ -186,13 +165,12 @@ struct OnboardingView: View {
         .animation(.spring(response: 0.38, dampingFraction: 0.62), value: messageIndex)
     }
 
-    // MARK: - Buttons
-
     private var appleButton: some View {
         Button(action: requestCalendarAccess) {
             HStack(spacing: MRSpacing.sm) {
                 Image(systemName: "apple.logo")
                     .font(.system(size: 22, weight: .medium))
+                    .accessibilityHidden(true)
                 Text("Continue with Apple Calendar")
                     .font(.system(.body, design: .default).weight(.medium))
             }
@@ -203,31 +181,9 @@ struct OnboardingView: View {
             .clipShape(Capsule())
         }
         .buttonStyle(ScalePressStyle())
+        .accessibilityLabel("Continue with Apple Calendar")
+        .accessibilityHint("Grants calendar access so Meetbot can remind you before meetings")
     }
-
-    private var googleButton: some View {
-        Button(action: connectGoogleCalendar) {
-            HStack(spacing: MRSpacing.sm) {
-                Image("google-logo")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 22, height: 22)
-                Text("Continue with Google Calendar")
-                    .font(.system(.body, design: .default).weight(.medium))
-            }
-            .frame(maxWidth: .infinity)
-            .padding(.vertical, MRSpacing.md)
-            .background(Color.clear)
-            .foregroundColor(isDarkMode ? .white : .primary)
-            .overlay(Capsule().stroke(
-                isDarkMode ? Color.white.opacity(0.20) : Color.black.opacity(0.25),
-                lineWidth: 1.5
-            ))
-        }
-        .buttonStyle(ScalePressStyle())
-    }
-
-    // MARK: - Actions
 
     private func requestCalendarAccess() {
         Task {
@@ -238,19 +194,9 @@ struct OnboardingView: View {
                     UserDefaults.standard.set("apple", forKey: "calendarProvider")
                     withAnimation(.easeInOut(duration: 0.4)) { showConfirmation = true }
                 }
-            } catch {
-                // Permission denied or restricted — user stays on onboarding
-            }
+            } catch { }
         }
     }
-
-    private func connectGoogleCalendar() {
-        // TODO: Implement full Google OAuth flow in a future phase
-        UserDefaults.standard.set("google", forKey: "calendarProvider")
-        withAnimation(.easeInOut(duration: 0.4)) { showConfirmation = true }
-    }
-
-    // MARK: - Message cycle
 
     private func startMessageCycle() {
         func showNext() {
@@ -267,11 +213,8 @@ struct OnboardingView: View {
     }
 }
 
-// MARK: - Supporting types (private to this file)
-
 private struct SpeechBubbleView: View {
     let text: String
-
     var body: some View {
         VStack(spacing: 0) {
             Text(text)
@@ -279,15 +222,8 @@ private struct SpeechBubbleView: View {
                 .foregroundColor(Color(hex: "1C1C2E"))
                 .multilineTextAlignment(.center)
                 .padding(8)
-                .background(
-                    RoundedRectangle(cornerRadius: MRRadius.sm)
-                        .fill(Color.white)
-                )
-
-            BubblePointer()
-                .fill(Color.white)
-                .frame(width: 8, height: 6)
-                .offset(y: -0.5)
+                .background(RoundedRectangle(cornerRadius: MRRadius.sm).fill(Color.white))
+            BubblePointer().fill(Color.white).frame(width: 8, height: 6).offset(y: -0.5)
         }
         .shadow(color: .black.opacity(0.18), radius: 6, x: 0, y: 3)
     }
