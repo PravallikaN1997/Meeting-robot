@@ -48,9 +48,9 @@ struct DashboardView: View {
     }
 
     private var todayLabel: String {
-        let f = DateFormatter()
-        f.dateFormat = "EEEE, MMMM d"
-        return f.string(from: Date())
+        let formatter = DateFormatter()
+        formatter.dateFormat = "EEEE, MMMM d"
+        return formatter.string(from: Date())
     }
 }
 

@@ -1,5 +1,6 @@
 import ServiceManagement
 import SwiftUI
+import Combine
 
 @MainActor
 class LaunchAtLoginManager: ObservableObject {

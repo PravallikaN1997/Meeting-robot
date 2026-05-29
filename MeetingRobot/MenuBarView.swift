@@ -199,9 +199,9 @@ struct MenuBarView: View {
     // MARK: - Helpers
 
     private var todayLabel: String {
-        let f = DateFormatter()
-        f.dateFormat = "EEEE, MMM d"
-        return f.string(from: Date())
+        let formatter = DateFormatter()
+        formatter.dateFormat = "EEEE, MMM d"
+        return formatter.string(from: Date())
     }
 }
 

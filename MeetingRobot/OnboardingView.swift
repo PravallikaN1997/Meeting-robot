@@ -21,7 +21,7 @@ struct OnboardingView: View {
         "Beep boop... loading your schedule 🔄",
         "I walk so your meetings don't sneak up on you 🚶",
         "Your calendar, but make it smart 🧠",
-        "Zero late arrivals guaranteed 🎯",
+        "Zero late arrivals guaranteed 🎯"
     ]
 
     var body: some View {
@@ -160,8 +160,8 @@ struct OnboardingView: View {
 
     private var speechBubble: some View {
         ZStack {
-            ForEach(messages.indices, id: \.self) { i in
-                if i == messageIndex {
+            ForEach(messages.indices, id: \.self) { index in
+                if index == messageIndex {
                     SpeechBubbleView(text: messages[i])
                         .transition(reduceMotion ? .opacity : .scale(scale: 0.8).combined(with: .opacity))
                 }

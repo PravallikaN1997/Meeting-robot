@@ -57,9 +57,9 @@ class CalendarManager: ObservableObject {
 
     @Published var todayMeetings: [Meeting] = []
     @Published var tomorrowMeetings: [Meeting] = []
-    @Published var nextMeeting: Meeting? = nil
+    @Published var nextMeeting: Meeting?
     @Published var authorizationStatus: EKAuthorizationStatus = .notDetermined
-    @Published var errorMessage: String? = nil
+    @Published var errorMessage: String?
     @Published var isLoading: Bool = false
 
     private let store = EKEventStore()

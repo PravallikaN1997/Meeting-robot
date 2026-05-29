@@ -12,7 +12,7 @@ struct OverlayView: View {
     @State private var bubbleText: String = ""
     @State private var clickMessageIndex: Int = 0
     @State private var isClickMessage: Bool = false
-    @State private var walkTimer: Timer? = nil
+    @State private var walkTimer: Timer?
     @State private var phase: WalkPhase = .walkingIn
     @State private var isHovering: Bool = false
     @State private var cursorOffset: CGSize = .zero
@@ -212,18 +212,18 @@ struct OverlayView: View {
 
 private struct BubbleTriangle: Shape {
     func path(in rect: CGRect) -> Path {
-        var p = Path()
-        p.move(to: CGPoint(x: 0, y: 0))
-        p.addLine(to: CGPoint(x: rect.midX, y: rect.maxY))
-        p.addLine(to: CGPoint(x: rect.maxX, y: 0))
-        p.closeSubpath()
-        return p
+        var path = Path()
+        path.move(to: CGPoint(x: 0, y: 0))
+        path.addLine(to: CGPoint(x: rect.midX, y: rect.maxY))
+        path.addLine(to: CGPoint(x: rect.maxX, y: 0))
+        path.closeSubpath()
+        return path
     }
 }
 
 struct WalkingRobotView: View {
     var body: some View {
-        _WalkingRobotNSView()
+        WalkingRobotNSView()
             .frame(width: 346, height: 346)
             .scaleEffect(0.231)
             .frame(width: 80, height: 80)
@@ -231,7 +231,7 @@ struct WalkingRobotView: View {
     }
 }
 
-struct _WalkingRobotNSView: NSViewRepresentable {
+struct WalkingRobotNSView: NSViewRepresentable {
     func makeNSView(context: Context) -> LottieAnimationView {
         let view = LottieAnimationView(name: "robot")
         view.contentMode = .scaleAspectFit
