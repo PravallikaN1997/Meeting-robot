@@ -127,7 +127,7 @@ struct OnboardingView: View {
             Button(action: {
                 NSApplication.shared.keyWindow?.close()
             }) {
-                Text("Not Interested")
+                Text("Not Interested").underline()
                     .font(.caption)
                     .foregroundColor(isDarkMode ? Color.white.opacity(0.40) : .gray)
             }
