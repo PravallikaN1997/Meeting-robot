@@ -1,15 +1,19 @@
 import SwiftUI
+import ServiceManagement
 
 @main
 struct MeetingRobotApp: App {
     @StateObject private var calendarManager = CalendarManager.shared
+    @StateObject private var launchManager = LaunchAtLoginManager.shared
+    @AppStorage("isDarkMode") private var isDarkMode = false
+    @AppStorage("hasSetInitialAppearance") private var hasSetInitialAppearance = false
 
     var body: some Scene {
-        // Main window — only shown during onboarding
         WindowGroup {
             ContentView()
                 .environmentObject(calendarManager)
                 .onAppear {
+                    setInitialAppearanceIfNeeded()
                     OverlayWindowController.shared
                         .startMonitoring(calendarManager: calendarManager)
                 }
@@ -17,7 +21,6 @@ struct MeetingRobotApp: App {
         .windowStyle(.hiddenTitleBar)
         .windowResizability(.contentSize)
 
-        // Menu bar icon — always present after launch
         MenuBarExtra {
             MenuBarView()
                 .environmentObject(calendarManager)
@@ -25,5 +28,14 @@ struct MeetingRobotApp: App {
             Label("Meetbot", systemImage: "calendar.badge.clock")
         }
         .menuBarExtraStyle(.window)
+    }
+
+    private func setInitialAppearanceIfNeeded() {
+        guard !hasSetInitialAppearance else { return }
+        let systemIsDark = NSApp.effectiveAppearance.bestMatch(
+            from: [.darkAqua, .aqua]
+        ) == .darkAqua
+        isDarkMode = systemIsDark
+        hasSetInitialAppearance = true
     }
 }
