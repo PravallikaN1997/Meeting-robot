@@ -53,8 +53,6 @@ struct Meeting: Identifiable {
 
 @MainActor
 class CalendarManager: ObservableObject {
-    // @MainActor on the static property ensures the initializer is called on
-    // the main actor, matching the class isolation.
     @MainActor static let shared = CalendarManager()
 
     @Published var todayMeetings: [Meeting] = []
@@ -62,11 +60,9 @@ class CalendarManager: ObservableObject {
     @Published var nextMeeting: Meeting? = nil
     @Published var authorizationStatus: EKAuthorizationStatus = .notDetermined
     @Published var errorMessage: String? = nil
+    @Published var isLoading: Bool = false
 
     private let store = EKEventStore()
-
-    // nonisolated(unsafe) lets deinit (which is non-actor-isolated) invalidate
-    // the timer without a Swift 6 concurrency error.
     private nonisolated(unsafe) var refreshTimer: Timer?
 
     init() {
@@ -86,25 +82,31 @@ class CalendarManager: ObservableObject {
     }
 
     func requestAccess() async {
+        isLoading = true
         do {
             let granted = try await store.requestFullAccessToEvents()
             authorizationStatus = EKEventStore.authorizationStatus(for: .event)
-            if granted { fetchMeetings() }
+            if granted {
+                fetchMeetings()
+            } else {
+                errorMessage = "Calendar access was denied. Please enable it in System Settings → Privacy → Calendars."
+                isLoading = false
+            }
         } catch {
-            errorMessage = "Calendar access denied: \(error.localizedDescription)"
+            errorMessage = "Calendar access error: \(error.localizedDescription)"
+            isLoading = false
         }
     }
 
     // MARK: - Fetch
 
     func fetchMeetings() {
-        let calendar = Calendar.current
+        isLoading = true
+        errorMessage = nil
 
-        // Today: start of day → end of day
+        let calendar = Calendar.current
         let startOfToday = calendar.startOfDay(for: Date())
         let endOfToday = calendar.date(byAdding: .day, value: 1, to: startOfToday)!
-
-        // Tomorrow: end of today → end of tomorrow
         let startOfTomorrow = endOfToday
         let endOfTomorrow = calendar.date(byAdding: .day, value: 1, to: startOfTomorrow)!
 
@@ -135,46 +137,7 @@ class CalendarManager: ObservableObject {
             $0.minutesUntilStart > 0 || $0.isHappeningNow
         })
 
-        errorMessage = nil
-
-        // If no events fetched (beta bug workaround), use mock data
-        if todayMeetings.isEmpty {
-            let now = Date()
-            let cal = Calendar.current
-            todayMeetings = [
-                Meeting(
-                    id: "mock-1",
-                    title: "Team Standup",
-                    startDate: cal.date(byAdding: .minute, value: 5, to: now)!,
-                    endDate: cal.date(byAdding: .minute, value: 35, to: now)!,
-                    calendarName: "Work",
-                    calendarColor: .blue,
-                    location: "Zoom",
-                    notes: nil
-                ),
-                Meeting(
-                    id: "mock-2",
-                    title: "Design Review",
-                    startDate: cal.date(byAdding: .hour, value: 2, to: now)!,
-                    endDate: cal.date(byAdding: .hour, value: 3, to: now)!,
-                    calendarName: "Work",
-                    calendarColor: .purple,
-                    location: "Conference Room A",
-                    notes: nil
-                ),
-                Meeting(
-                    id: "mock-3",
-                    title: "1:1 with Manager",
-                    startDate: cal.date(byAdding: .hour, value: 4, to: now)!,
-                    endDate: cal.date(byAdding: .minute, value: 270, to: now)!,
-                    calendarName: "Personal",
-                    calendarColor: .green,
-                    location: nil,
-                    notes: nil
-                )
-            ]
-            nextMeeting = todayMeetings.first
-        }
+        isLoading = false
     }
 
     // MARK: - Map EKEvent → Meeting
@@ -202,8 +165,6 @@ class CalendarManager: ObservableObject {
             withTimeInterval: 60,
             repeats: true
         ) { [weak self] _ in
-            // Re-enter the main actor explicitly; self is already @MainActor
-            // but the Timer callback closure is non-isolated.
             Task { @MainActor [weak self] in
                 self?.fetchMeetings()
             }
