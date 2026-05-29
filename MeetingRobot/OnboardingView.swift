@@ -9,6 +9,7 @@ struct OnboardingView: View {
     @State private var showBubble = false
     @State private var bubbleVisible: Bool = false
     @State private var robotOffset: CGFloat = 0
+    @State private var isDismissing: Bool = false
     @Environment(\.accessibilityReduceMotion) var reduceMotion
 
     private let messages = [
@@ -34,6 +35,8 @@ struct OnboardingView: View {
                     .transition(.opacity)
             } else {
                 mainContent.transition(.opacity)
+                    .opacity(isDismissing ? 0 : 1)
+                    .scaleEffect(isDismissing ? 0.96 : 1)
             }
         }
         .preferredColorScheme(isDarkMode ? .dark : .light)
@@ -125,7 +128,10 @@ struct OnboardingView: View {
             Spacer().frame(height: 20)
 
             Button(action: {
-                NSApplication.shared.keyWindow?.close()
+                withAnimation(.easeInOut(duration: 0.3)) { isDismissing = true }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.35) {
+                    NSApplication.shared.keyWindow?.close()
+                }
             }) {
                 Text("Not Interested").underline()
                     .font(.caption)
