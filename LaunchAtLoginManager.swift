@@ -12,7 +12,7 @@ class LaunchAtLoginManager: ObservableObject {
     }
 
     func toggle() {
-        isEnabled ? disable() : enable()
+        if isEnabled { disable() } else { enable() }
     }
 
     func enable() {
