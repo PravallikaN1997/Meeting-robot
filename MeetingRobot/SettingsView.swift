@@ -25,7 +25,7 @@ struct SettingsView: View {
                     icon: "bell.fill", iconColor: .orange,
                     title: "Remind me before",
                     control: AnyView(
-                        Picker("Reminder time", selection: $reminderMinutes) {
+                        Picker("", selection: $reminderMinutes) {
                             Text("5 mins").tag(5)
                             Text("10 mins").tag(10)
                             Text("15 mins").tag(15)
