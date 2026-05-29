@@ -22,10 +22,11 @@
 		858F77432FC8934500517186 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = II002222FC76A190054E80E /* SettingsView.swift */; };
 		858F77452FC8934500517186 /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 858F77352FC8934500517186 /* Lottie */; };
 		858F77472FC8934500517186 /* robot.json in Resources */ = {isa = PBXBuildFile; fileRef = BB008882FC76A190054E80E /* robot.json */; };
-		OO001112FC76A190054E80E /* celebrate.json in Resources */ = {isa = PBXBuildFile; fileRef = NN002222FC76A190054E80E /* celebrate.json */; };
 		858F77482FC8934500517186 /* SettingsView.swift in Resources */ = {isa = PBXBuildFile; fileRef = II002222FC76A190054E80E /* SettingsView.swift */; };
 		858F77492FC8934500517186 /* robot-bg.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = EE001112FC76A190054E80E /* robot-bg.mp4 */; };
 		858F774A2FC8934500517186 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BB009992FC76A190054E80E /* Assets.xcassets */; };
+		85DCA2BD2FC98CD80020033A /* LaunchAtLoginManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DCA2BC2FC98CD80020033A /* LaunchAtLoginManager.swift */; };
+		85DCA2BE2FC98CD80020033A /* LaunchAtLoginManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85DCA2BC2FC98CD80020033A /* LaunchAtLoginManager.swift */; };
 		AA0003332FC76A190054E80E /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = AA0002222FC76A190054E80E /* Lottie */; };
 		CC001112FC76A190054E80E /* MeetingRobotApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB001112FC76A190054E80E /* MeetingRobotApp.swift */; };
 		CC002222FC76A190054E80E /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB002222FC76A190054E80E /* ContentView.swift */; };
@@ -35,7 +36,6 @@
 		CC006662FC76A190054E80E /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB006662FC76A190054E80E /* OnboardingView.swift */; };
 		CC007772FC76A190054E80E /* ConfirmationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB007772FC76A190054E80E /* ConfirmationView.swift */; };
 		CC008882FC76A190054E80E /* robot.json in Resources */ = {isa = PBXBuildFile; fileRef = BB008882FC76A190054E80E /* robot.json */; };
-		NN001112FC76A190054E80E /* celebrate.json in Resources */ = {isa = PBXBuildFile; fileRef = NN002222FC76A190054E80E /* celebrate.json */; };
 		CC009992FC76A190054E80E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BB009992FC76A190054E80E /* Assets.xcassets */; };
 		DD001112FC76A190054E80E /* FluidGradientBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD002222FC76A190054E80E /* FluidGradientBackground.swift */; };
 		EE002222FC76A190054E80E /* robot-bg.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = EE001112FC76A190054E80E /* robot-bg.mp4 */; };
@@ -47,11 +47,14 @@
 		KK001112FC76A190054E80E /* OverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = KK002222FC76A190054E80E /* OverlayView.swift */; };
 		LL001112FC76A190054E80E /* cursor-animation.json in Resources */ = {isa = PBXBuildFile; fileRef = LL002222FC76A190054E80E /* cursor-animation.json */; };
 		MM001112FC76A190054E80E /* cursor-animation.json in Resources */ = {isa = PBXBuildFile; fileRef = LL002222FC76A190054E80E /* cursor-animation.json */; };
+		NN001112FC76A190054E80E /* celebrate.json in Resources */ = {isa = PBXBuildFile; fileRef = NN002222FC76A190054E80E /* celebrate.json */; };
+		OO001112FC76A190054E80E /* celebrate.json in Resources */ = {isa = PBXBuildFile; fileRef = NN002222FC76A190054E80E /* celebrate.json */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		85679F892FC76A190054E80E /* MeetingRobot.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MeetingRobot.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		858F774E2FC8934500517186 /* MeetingRobot copy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "MeetingRobot copy.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		85DCA2BC2FC98CD80020033A /* LaunchAtLoginManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchAtLoginManager.swift; sourceTree = "<group>"; };
 		BB001112FC76A190054E80E /* MeetingRobotApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeetingRobotApp.swift; sourceTree = "<group>"; };
 		BB002222FC76A190054E80E /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		BB003332FC76A190054E80E /* DesignSystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignSystem.swift; sourceTree = "<group>"; };
@@ -60,8 +63,6 @@
 		BB006662FC76A190054E80E /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		BB007772FC76A190054E80E /* ConfirmationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmationView.swift; sourceTree = "<group>"; };
 		BB008882FC76A190054E80E /* robot.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = robot.json; sourceTree = "<group>"; };
-		NN002222FC76A190054E80E /* celebrate.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = celebrate.json; sourceTree = "<group>"; };
-		LL002222FC76A190054E80E /* cursor-animation.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "cursor-animation.json"; sourceTree = "<group>"; };
 		BB009992FC76A190054E80E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		BB00AAA2FC76A190054E80E /* MeetingRobot.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MeetingRobot.entitlements; sourceTree = "<group>"; };
 		DD002222FC76A190054E80E /* FluidGradientBackground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FluidGradientBackground.swift; sourceTree = "<group>"; };
@@ -72,6 +73,8 @@
 		II002222FC76A190054E80E /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		JJ002222FC76A190054E80E /* OverlayWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayWindowController.swift; sourceTree = "<group>"; };
 		KK002222FC76A190054E80E /* OverlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayView.swift; sourceTree = "<group>"; };
+		LL002222FC76A190054E80E /* cursor-animation.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "cursor-animation.json"; sourceTree = "<group>"; };
+		NN002222FC76A190054E80E /* celebrate.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = celebrate.json; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -97,6 +100,7 @@
 		85679F802FC76A190054E80E = {
 			isa = PBXGroup;
 			children = (
+				85DCA2BC2FC98CD80020033A /* LaunchAtLoginManager.swift */,
 				85679F8B2FC76A190054E80E /* MeetingRobot */,
 				85679F8A2FC76A190054E80E /* Products */,
 			);
@@ -227,8 +231,7 @@
 				CC008882FC76A190054E80E /* robot.json in Resources */,
 				NN001112FC76A190054E80E /* celebrate.json in Resources */,
 				LL001112FC76A190054E80E /* cursor-animation.json in Resources */,
-				858F77332FC88F3100517186 /* SettingsView.swift in Resources */,
-				EE002222FC76A190054E80E /* robot-bg.mp4 in Resources */,
+								EE002222FC76A190054E80E /* robot-bg.mp4 in Resources */,
 				CC009992FC76A190054E80E /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -258,6 +261,7 @@
 				CC003332FC76A190054E80E /* DesignSystem.swift in Sources */,
 				CC004442FC76A190054E80E /* Theme.swift in Sources */,
 				CC005552FC76A190054E80E /* RobotAnimationView.swift in Sources */,
+				85DCA2BD2FC98CD80020033A /* LaunchAtLoginManager.swift in Sources */,
 				CC006662FC76A190054E80E /* OnboardingView.swift in Sources */,
 				CC007772FC76A190054E80E /* ConfirmationView.swift in Sources */,
 				DD001112FC76A190054E80E /* FluidGradientBackground.swift in Sources */,
@@ -275,6 +279,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				858F77382FC8934500517186 /* MeetingRobotApp.swift in Sources */,
+				85DCA2BE2FC98CD80020033A /* LaunchAtLoginManager.swift in Sources */,
 				858F77392FC8934500517186 /* ContentView.swift in Sources */,
 				858F773A2FC8934500517186 /* DesignSystem.swift in Sources */,
 				858F773B2FC8934500517186 /* Theme.swift in Sources */,
@@ -423,6 +428,7 @@
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_NSCalendarsFullAccessUsageDescription = "MeetingRobot needs calendar access to alert you before meetings.";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -455,6 +461,7 @@
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_NSCalendarsFullAccessUsageDescription = "MeetingRobot needs calendar access to alert you before meetings.";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -487,6 +494,7 @@
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_NSCalendarsFullAccessUsageDescription = "MeetingRobot needs calendar access to alert you before meetings.";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -519,6 +527,7 @@
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_NSCalendarsFullAccessUsageDescription = "MeetingRobot needs calendar access to alert you before meetings.";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
