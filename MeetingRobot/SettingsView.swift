@@ -1,13 +1,14 @@
 import SwiftUI
+import ServiceManagement
 
 struct SettingsView: View {
     @AppStorage("reminderMinutes") var reminderMinutes: Int = 5
     @AppStorage("isDarkMode") var isDarkMode: Bool = false
     @AppStorage("showTomorrowMeetings") var showTomorrow: Bool = true
+    @StateObject private var launchManager = LaunchAtLoginManager.shared
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            // Header
             HStack {
                 Text("Settings")
                     .font(.system(size: 13, weight: .semibold))
@@ -15,17 +16,16 @@ struct SettingsView: View {
             }
             .padding(.horizontal, 14)
             .padding(.vertical, 12)
+            .accessibilityAddTraits(.isHeader)
 
             Divider()
 
             VStack(alignment: .leading, spacing: 0) {
-                // Reminder timing
                 settingsRow(
-                    icon: "bell.fill",
-                    iconColor: .orange,
+                    icon: "bell.fill", iconColor: .orange,
                     title: "Remind me before",
                     control: AnyView(
-                        Picker("", selection: $reminderMinutes) {
+                        Picker("Reminder time", selection: $reminderMinutes) {
                             Text("5 mins").tag(5)
                             Text("10 mins").tag(10)
                             Text("15 mins").tag(15)
@@ -33,34 +33,51 @@ struct SettingsView: View {
                         }
                         .pickerStyle(.menu)
                         .frame(width: 100)
+                        .accessibilityLabel("Reminder time before meeting")
+                        .accessibilityValue("\(reminderMinutes) minutes")
                     )
                 )
 
                 Divider().padding(.leading, 36)
 
-                // Dark mode
                 settingsRow(
-                    icon: "moon.fill",
-                    iconColor: .purple,
+                    icon: "moon.fill", iconColor: .purple,
                     title: "Dark mode",
                     control: AnyView(
-                        Toggle("", isOn: $isDarkMode)
-                            .toggleStyle(.switch)
-                            .scaleEffect(0.8)
+                        Toggle("Dark mode", isOn: $isDarkMode)
+                            .toggleStyle(.switch).scaleEffect(0.8).labelsHidden()
+                            .accessibilityLabel("Dark mode")
+                            .accessibilityValue(isDarkMode ? "on" : "off")
                     )
                 )
 
                 Divider().padding(.leading, 36)
 
-                // Show tomorrow
                 settingsRow(
-                    icon: "calendar",
-                    iconColor: .blue,
+                    icon: "calendar", iconColor: .blue,
                     title: "Show tomorrow's meetings",
                     control: AnyView(
-                        Toggle("", isOn: $showTomorrow)
-                            .toggleStyle(.switch)
-                            .scaleEffect(0.8)
+                        Toggle("Show tomorrow", isOn: $showTomorrow)
+                            .toggleStyle(.switch).scaleEffect(0.8).labelsHidden()
+                            .accessibilityLabel("Show tomorrow's meetings")
+                            .accessibilityValue(showTomorrow ? "on" : "off")
+                    )
+                )
+
+                Divider().padding(.leading, 36)
+
+                settingsRow(
+                    icon: "power", iconColor: .green,
+                    title: "Launch at login",
+                    control: AnyView(
+                        Toggle("Launch at login", isOn: Binding(
+                            get: { launchManager.isEnabled },
+                            set: { _ in launchManager.toggle() }
+                        ))
+                        .toggleStyle(.switch).scaleEffect(0.8).labelsHidden()
+                        .accessibilityLabel("Launch at login")
+                        .accessibilityValue(launchManager.isEnabled ? "on" : "off")
+                        .accessibilityHint("Automatically starts Meetbot when you log in")
                     )
                 )
             }
@@ -68,7 +85,6 @@ struct SettingsView: View {
 
             Divider()
 
-            // Version footer
             HStack {
                 Text("Meetbot v1.0")
                     .font(.system(size: 11))
@@ -77,6 +93,7 @@ struct SettingsView: View {
             }
             .padding(.horizontal, 14)
             .padding(.vertical, 10)
+            .accessibilityLabel("Meetbot version 1.0")
         }
         .frame(width: 300)
         .background(Color(NSColor.windowBackgroundColor))
@@ -92,12 +109,9 @@ struct SettingsView: View {
                 .frame(width: 22, height: 22)
                 .background(iconColor.opacity(0.12))
                 .cornerRadius(5)
-
-            Text(title)
-                .font(.system(size: 12))
-
+                .accessibilityHidden(true)
+            Text(title).font(.system(size: 12))
             Spacer()
-
             control
         }
         .padding(.horizontal, 14)
