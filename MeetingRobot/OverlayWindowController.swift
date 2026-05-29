@@ -4,6 +4,7 @@ import SwiftUI
 class OverlayWindowController: NSObject {
     private var overlayWindow: NSPanel?
     private var checkTimer: Timer?
+    private var shownMeetingIds: Set<String> = []
     private var dismissedMeetingIds: Set<String> = []
 
     static let shared = OverlayWindowController()
@@ -14,21 +15,23 @@ class OverlayWindowController: NSObject {
             withTimeInterval: 30,
             repeats: true
         ) { [weak self] _ in
-            self?.checkForUpcomingMeetings(
-                calendarManager: calendarManager)
+            self?.checkForUpcomingMeetings(calendarManager: calendarManager)
         }
-        checkForUpcomingMeetings(calendarManager: calendarManager)
     }
 
-    private func checkForUpcomingMeetings(
-        calendarManager: CalendarManager
-    ) {
-        guard let meeting = calendarManager.todayMeetings
-            .first(where: {
-                let mins = $0.minutesUntilStart
-                return mins > 0 && mins <= 60 &&
-                       !dismissedMeetingIds.contains($0.id)
-            }) else { return }
+    private func checkForUpcomingMeetings(calendarManager: CalendarManager) {
+        let reminderMinutes = UserDefaults.standard.integer(forKey: "reminderMinutes")
+        let threshold = reminderMinutes > 0 ? reminderMinutes : 5
+
+        guard let meeting = calendarManager.todayMeetings.first(where: {
+            let mins = $0.minutesUntilStart
+            return mins > 0
+                && mins <= threshold
+                && !shownMeetingIds.contains($0.id)
+                && !dismissedMeetingIds.contains($0.id)
+        }) else { return }
+
+        shownMeetingIds.insert(meeting.id)
 
         DispatchQueue.main.async {
             self.showOverlay(for: meeting)
@@ -60,9 +63,7 @@ class OverlayWindowController: NSObject {
         window.level = .floating
         window.hasShadow = false
         window.ignoresMouseEvents = false
-        window.collectionBehavior = [
-            .canJoinAllSpaces, .fullScreenAuxiliary
-        ]
+        window.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary]
         window.isMovableByWindowBackground = false
         window.level = NSWindow.Level(
             rawValue: Int(CGWindowLevelForKey(.floatingWindow))
